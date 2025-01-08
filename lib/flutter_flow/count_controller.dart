@@ -11,7 +11,7 @@ class CountController extends StatefulWidget {
     this.stepSize = 1,
     this.minimum,
     this.maximum,
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 25.0),
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 25.0), required int minValue, required int maxValue,
   }) : super(key: key);
 
   final Widget Function(bool enabled) decrementIconBuilder;

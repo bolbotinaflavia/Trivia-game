@@ -6,35 +6,77 @@ import 'package:trivia_2/flutter_flow/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:trivia_2/reusables/menu.dart';
+import '../new_answer/new_answer_widget.dart';
 import 'new_question_model.dart';
 export 'new_question_model.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
 class NewQuestionWidget extends StatefulWidget {
-  const NewQuestionWidget({super.key});
+  final String quizId;
+  final String questionId;
+
+  const NewQuestionWidget(
+      {Key? key, required this.quizId, required this.questionId})
+      : super(key: key);
 
   @override
   State<NewQuestionWidget> createState() => _NewQuestionWidgetState();
 }
 
 class _NewQuestionWidgetState extends State<NewQuestionWidget> {
-  late NewQuestionModel _model;
+  final TextEditingController questionTextController = TextEditingController();
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
+  get scaffoldKey => GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => NewQuestionModel());
-
-    _model.textController ??= TextEditingController();
-    _model.textFieldFocusNode ??= FocusNode();
+    _loadQuestionText();
   }
 
-  @override
-  void dispose() {
-    _model.dispose();
+  Future<void> _loadQuestionText() async {
+    try {
+      final questionDoc = await FirebaseFirestore.instance
+          .collection('questions')
+          .doc(widget.questionId)
+          .get();
 
-    super.dispose();
+      if (questionDoc.exists) {
+        final data = questionDoc.data();
+        questionTextController.text = data?['text'] ?? '';
+      }
+    } catch (e) {
+      print('Error loading question text: $e');
+    }
+  }
+
+  Future<void> _saveQuestionText() async {
+    final text = questionTextController.text.trim();
+    if (text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Question text cannot be empty')),
+      );
+      return;
+    }
+
+    try {
+      final questionRef = FirebaseFirestore.instance
+          .collection('questions')
+          .doc(widget.questionId);
+
+      await questionRef.set({
+        'text': text,
+        'quizId': widget.quizId, // Link the question to the quiz
+      }, SetOptions(merge: true));
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Question saved successfully')),
+      );
+    } catch (e) {
+      print('Error saving question text: $e');
+    }
   }
 
   @override
@@ -44,400 +86,92 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: MyAppTheme.of(context).primaryBackground,
-        drawer: Container(
-          width: 300.0,
-          child: Drawer(
-            elevation: 16.0,
-            child: Align(
-              alignment: AlignmentDirectional(-1.0, -1.0),
-              child: Container(
-                height: 876.0,
-                decoration: BoxDecoration(
-                  color: Color(0xFF1D5D8A),
-                ),
-                child: Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Opacity(
-                        opacity: 0.0,
-                        child: Divider(
-                          height: 50.0,
-                          thickness: 2.0,
-                          color:  MyAppTheme.of(context).alternate,
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Profile');
-                        },
-                        text: 'Profile',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Quizzes');
-                        },
-                        text: 'Quizzes',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('PartyPage');
-                        },
-                        text: 'Party',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('About');
-                        },
-                        text: 'About',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        drawer: CustomDrawer(),
         appBar: AppBar(
-          backgroundColor: Color(0xFF1D5D8A),
-          automaticallyImplyLeading: false,
-          leading:  MyAppIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 8.0,
-            buttonSize: 40.0,
-            fillColor: Color(0xFF1D5D8A),
-            icon: Icon(
-              Icons.home_rounded,
-              color:  MyAppTheme.of(context).info,
-              size: 24.0,
-            ),
-            onPressed: () async {
-              context.pushNamed('HomePage');
-            },
-          ),
-          actions: [
-            MyAppIconButton(
-              borderColor: Colors.transparent,
-              borderRadius: 8.0,
-              buttonSize: 40.0,
-              fillColor: Color(0xFF1D5D8A),
-              icon: Icon(
-                Icons.menu_rounded,
-                color:  MyAppTheme.of(context).info,
-                size: 24.0,
-              ),
-              onPressed: () async {
-                scaffoldKey.currentState!.openDrawer();
-              },
-            ),
-          ],
-          centerTitle: false,
-          elevation: 2.0,
+          title: const Text('Edit Question'),
+          backgroundColor: const Color(0xFF1D5D8A),
         ),
-        body: SafeArea(
-          top: true,
-          child: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Opacity(
-                    opacity: 0.0,
-                    child: Divider(
-                      height: 70.0,
-                      thickness: 2.0,
-                      color:  MyAppTheme.of(context).alternate,
-                    ),
-                  ),
-                  Text(
-                    'Question',
-                    style:  MyAppTheme.of(context).headlineSmall.override(
-                          fontFamily: 'Readex Pro',
-                          letterSpacing: 0.0,
-                        ),
-                  ),
-                  Container(
-                    width: 200.0,
-                    child: TextFormField(
-                      controller: _model.textController,
-                      focusNode: _model.textFieldFocusNode,
-                      autofocus: false,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        labelStyle:
-                        MyAppTheme.of(context).labelMedium.override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
-                        hintText: 'Write a question',
-                        hintStyle:
-                        MyAppTheme.of(context).labelMedium.override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:  MyAppTheme.of(context).error,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:  MyAppTheme.of(context).error,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        filled: true,
-                        fillColor:
-                        MyAppTheme.of(context).secondaryBackground,
-                      ),
-                      style:  MyAppTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Inter',
-                            letterSpacing: 0.0,
-                          ),
-                      cursorColor:  MyAppTheme.of(context).primaryText,
-                      validator:
-                          _model.textControllerValidator.asValidator(context),
-                    ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('NewAnswer');
-                        },
-                        text: 'New Answer',
-                        icon: Icon(
-                          Icons.add_box,
-                          size: 15.0,
-                        ),
-                        options: FFButtonOptions(
-                          width: 355.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color:  MyAppTheme.of(context).alternate,
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.black,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      ListView(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        children: [
-                          Container(
-                            width: 355.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFBED5DA),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Text(
-                                'Answer 1',
-                                style:  MyAppTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      color: Colors.black,
-                                      letterSpacing: 0.0,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 355.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFBED5DA),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Text(
-                                'Answer 2',
-                                style:  MyAppTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      color: Colors.black,
-                                      letterSpacing: 0.0,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 355.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFBED5DA),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Text(
-                                'Answer 3',
-                                style:  MyAppTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      color: Colors.black,
-                                      letterSpacing: 0.0,
-                                    ),
-                              ),
-                            ),
-                          ),
-                        ].divide(SizedBox(height: 10.0)),
-                      ),
-                    ].divide(SizedBox(height: 10.0)),
-                  ),
-                  FFButtonWidget(
-                    onPressed: () async {
-                      context.pushNamed('CreateCustomQuiz');
-                    },
-                    text: 'Finish',
-                    icon: Icon(
-                      Icons.task_alt,
-                      size: 15.0,
-                    ),
-                    options: FFButtonOptions(
-                      height: 40.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: Color(0xFF1D5D8A),
-                      textStyle:
-                      MyAppTheme.of(context).titleSmall.override(
-                                fontFamily: 'Inter',
-                                color: Colors.white,
-                                letterSpacing: 0.0,
-                              ),
-                      elevation: 0.0,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                ].divide(SizedBox(height: 12.0)),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Text Field for Question
+              TextField(
+                controller: questionTextController,
+                decoration: const InputDecoration(
+                  labelText: 'Question Text',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 3,
               ),
-            ),
+              const SizedBox(height: 20),
+
+              // Save Question Button
+              ElevatedButton(
+                onPressed: () async =>
+                    {await _saveQuestionText(),
+                      Navigator.pop(context)},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1D5D8A),
+                ),
+                child: const Text('Save Question'),
+              ),
+              const SizedBox(height: 20),
+
+              // Add New Answer Button
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => NewAnswerWidget(
+                        quizId: widget.quizId,
+                        questionId: widget.questionId,
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1D5D8A),
+                ),
+                child: const Text('Add New Answer'),
+              ),
+              const SizedBox(height: 20),
+              // List of Answers
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('answers')
+                      .where('questionId', isEqualTo: widget.questionId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return const Center(child: Text('No answers found.'));
+                    }
+
+                    final answers = snapshot.data!.docs;
+
+                    return ListView.builder(
+                      itemCount: answers.length,
+                      itemBuilder: (context, index) {
+                        final answer = answers[index];
+                        return Card(
+                          child: ListTile(
+                            title: Text(answer['text'] ?? 'No text'),
+                            subtitle: Text(
+                                'Priority: ${answer['priority']} | Correct: ${answer['isCorrect']}'),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),

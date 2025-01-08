@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:trivia_2/flutter_flow/animations.dart';
 import 'package:trivia_2/flutter_flow/model.dart';
 import 'package:trivia_2/flutter_flow/theme.dart';
@@ -11,11 +13,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:trivia_2/index.dart';
+import '../../Services/FirebaseService.dart';
 import 'authenticate_model.dart';
 export 'authenticate_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 
 class AuthenticateWidget extends StatefulWidget {
-  const AuthenticateWidget({super.key});
+  const AuthenticateWidget({Key? key}) : super(key: key);
 
   @override
   State<AuthenticateWidget> createState() => _AuthenticateWidgetState();
@@ -28,6 +34,197 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final animationsMap = <String, AnimationInfo>{};
+  final emailAddressController = TextEditingController();
+  final passwordLoginController = TextEditingController();
+  final passwordConfirmedLoginController = TextEditingController();
+
+  final _auth = FirebaseAuth.instance;
+  final _formKey = GlobalKey<FormState>();
+  bool isloading = false;
+
+  late bool passwordLoginVisibility;
+  late bool emailAddressVisibility;
+  late User currentUser;
+
+  Future Navigation() async {
+    getCurrentUser();
+
+    var userRef =
+    FirebaseFirestore.instance.collection("users").doc(currentUser.uid);
+    DocumentSnapshot doc = await userRef.get();
+    final data = doc.data() as Map<String, dynamic>;
+    context.pushNamed('AuthenticateAnimation');
+  }
+  Future googleSignIn() async {
+    setState(() {
+      isloading = true;
+    });
+    FirebaseService service = new FirebaseService();
+    try {
+      await service.signInwithGoogle();
+      Navigation();
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        showMessage(e.message!);
+      }
+    }
+
+    setState(() {
+      isloading = false;
+    });
+  }
+
+  String? getuserName() {
+    String userName;
+    getCurrentUser();
+    List<String> spiltName = currentUser.displayName!.split(" ");
+    userName = spiltName[0];
+    return userName;
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        currentUser = user;
+        print(currentUser.uid);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future errorMessage(String message) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+          title: new Text(
+            message,
+            selectionColor: CupertinoColors.systemGrey,
+            style: TextStyle(
+                color: Colors.grey, fontFamily: 'Lexend Deca', fontSize: 15),
+          ),
+          backgroundColor: Colors.white,
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: new Text('OK'),
+            ),
+          ]),
+    );
+  }
+
+  Future signIn() async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _model.emailAddressTextController.text,
+          password: _model.passwordTextController.text);
+      Navigation();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+        errorMessage("Incorrect credentials!") ?? false;
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+  }
+
+  bool isValidEmail(String email) {
+    return RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(email);
+  }
+
+  bool emailConfirmed() {
+    if (_model.emailAddressCreateTextController.text.isEmpty) {
+      errorMessage("Please write your email address!");
+      return false;
+    }
+    else
+      return true;
+  }
+
+
+  Future addUserDetails(String uid, String? userName) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).set({
+      'uid': uid,
+      'userName': userName ?? "",
+      'friends':"",
+      'quizzes':"",
+      'partiesCreated':"",
+      'partiesJoined':"",
+      'uploadedImage': '',
+    });
+  }
+
+  bool isPasswordSafe(String password) {
+    // Check if password has at least one uppercase letter
+    bool hasUppercase = password.contains(new RegExp(r'[A-Z]'));
+    if (hasUppercase == false) {
+      errorMessage(
+          "Your password should contain at least one uppercase letter");
+    }
+    // Check if password has at least one lowercase letter
+    bool hasLowercase = password.contains(new RegExp(r'[a-z]'));
+    if (hasLowercase == false) {
+      errorMessage(
+          "Your password should contain at least one lowercase letter");
+    }
+    // Check if password has at least one digit
+    bool hasNumber = password.contains(new RegExp(r'[0-9]'));
+    if (hasNumber == false) {
+      errorMessage("Your password should contain at least one digit");
+    }
+    // Check if password has at least one symbol
+    bool hasSymbol = password.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+    if (hasSymbol == false) {
+      errorMessage("Your password should contain at least one symbol");
+    }
+    // Check if all criteria are met
+    return hasUppercase && hasLowercase && hasNumber && hasSymbol;
+  }
+
+  Future signUp() async {
+    if (emailConfirmed())
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+           email: _model.emailAddressCreateTextController.text,
+           password: _model.passwordCreateTextController.text,
+        );
+        getCurrentUser();
+        addUserDetails(
+            currentUser.uid.toString(),
+            AutofillHints.username,
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.blueGrey,
+            content: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Sucessfully added your info, please continue'),
+            ),
+            duration: Duration(seconds: 5),
+          ),
+        );
+        Navigator.pushReplacementNamed(context, 'address_screen');
+
+        setState(() {
+          isloading = false;
+        });
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+          errorMessage('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+          errorMessage('The account already exists for that email.');
+        } else {
+          errorMessage("Oops, registration failed!");
+        }
+      }
+    }
 
   @override
   void initState() {
@@ -549,9 +746,9 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                   0.0,
                                                                   16.0),
                                                       child: FFButtonWidget(
-                                                        onPressed: () {
-                                                          print(
-                                                              'Button pressed ...');
+                                                        //Create account
+                                                        onPressed: () async {
+                                                          signUp();
                                                         },
                                                         text: 'Get Started',
                                                         options:
@@ -1151,7 +1348,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                   16.0),
                                                       child: FFButtonWidget(
                                                         onPressed: () async {
-                                                          context.pushNamed('AuthenticateAnimation');
+                                                          signIn();
                                                         },
                                                         text: 'Sign In',
                                                         options:
@@ -1262,8 +1459,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                       16.0),
                                                           child: FFButtonWidget(
                                                             onPressed: () {
-                                                              print(
-                                                                  'Button pressed ...');
+                                                              googleSignIn();
                                                             },
                                                             text:
                                                                 'Continue with Google',
@@ -1506,5 +1702,8 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
         ),
       ),
     );
+  }
+  void showMessage(String s) {
+    print(s);
   }
 }

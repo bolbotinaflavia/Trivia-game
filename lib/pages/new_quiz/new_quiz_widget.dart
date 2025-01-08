@@ -1,3 +1,7 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:trivia_2/flutter_flow/icon_button.dart';
 import 'package:trivia_2/flutter_flow/model.dart';
 import 'package:trivia_2/flutter_flow/theme.dart';
@@ -6,11 +10,17 @@ import 'package:trivia_2/flutter_flow/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:trivia_2/index.dart';
+import 'package:trivia_2/model/Question.dart';
+import '../../Services/auth_service.dart';
+import '../../model/Quiz.dart';
+import '../../reusables/menu.dart';
 import 'new_quiz_model.dart';
 export 'new_quiz_model.dart';
 
 class NewQuizWidget extends StatefulWidget {
-  const NewQuizWidget({super.key});
+  final String userId;
+  const NewQuizWidget({super.key, required this.userId});
 
   @override
   State<NewQuizWidget> createState() => _NewQuizWidgetState();
@@ -20,6 +30,9 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
   late NewQuizModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late User currentUser;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
   @override
   void initState() {
@@ -31,6 +44,13 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
 
     _model.switchValue1 = true;
     _model.switchValue2 = true;
+
+    final user = _auth.currentUser;
+    if (user == null) {
+      return;
+    }
+    currentUser = user;
+
   }
 
   @override
@@ -40,6 +60,12 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
     super.dispose();
   }
 
+  Future addUserDetails(String userName) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'userName': userName,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -47,147 +73,7 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: MyAppTheme.of(context).primaryBackground,
-        drawer: Container(
-          width: 300.0,
-          child: Drawer(
-            elevation: 16.0,
-            child: Align(
-              alignment: AlignmentDirectional(-1.0, -1.0),
-              child: Container(
-                height: 876.0,
-                decoration: BoxDecoration(
-                  color: Color(0xFF1D5D8A),
-                ),
-                child: Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Opacity(
-                        opacity: 0.0,
-                        child: Divider(
-                          height: 50.0,
-                          thickness: 2.0,
-                          color: MyAppTheme.of(context).alternate,
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Profile');
-                        },
-                        text: 'Profile',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Quizzes');
-                        },
-                        text: 'Quizzes',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('PartyPage');
-                        },
-                        text: 'Party',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('About');
-                        },
-                        text: 'About',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        drawer: const CustomDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xFF1D5D8A),
           automaticallyImplyLeading: false,
@@ -363,8 +249,57 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
                     ],
                   ),
                   FFButtonWidget(
-                    onPressed: () {
-                      print('Button pressed ...');
+                    onPressed: () async {
+                      final title = _model.textController.text.trim();
+                      if (title.isNotEmpty) {
+                        final quizId = FirebaseFirestore.instance
+                            .collection('quizzes')
+                            .doc()
+                            .id;
+                        await FirebaseFirestore.instance
+                            .collection('quizzes')
+                            .doc(quizId)
+                            .set({'title': title, 'quizId': quizId,'creatorId':currentUser.uid.toString(),'questions':["",""]});
+                        if (_model.switchValue1 == false && _model.switchValue2 == true) {
+                          // Navigate to Generate Quiz Page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CreateCustomQuizWidget(
+                                quizTitle: title,
+                                quizId: quizId,
+                                userId: currentUser.uid.toString(),
+                              ),
+                            ),
+                          );
+                        } else if (_model.switchValue1 == true && _model.switchValue2 == false) {
+                          // Navigate to Custom Quiz Page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => GenerateQuizWidget(
+                                quizTitle: title,
+                                quizId: quizId,
+                                userId:currentUser.uid.toString(),
+                              ),
+                            ),
+                          );
+                        } else {
+                          // Error: Both or none of the switches are selected
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please select only one option.'),
+                            ),
+                          );
+                        }
+                      } else {
+                        // Error: Quiz title is empty
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please enter a quiz title'),
+                          ),
+                        );
+                      }
                     },
                     text: 'Next step',
                     icon: Icon(
@@ -396,4 +331,5 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
       ),
     );
   }
+
 }

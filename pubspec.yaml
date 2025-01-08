@@ -77,6 +77,8 @@ dependencies:
     # Add any other Firebase dependencies you need here, e.g., firebase_auth, cloud_firestore, etc.
 
   firebase_auth: ^5.3.4
+  cloud_firestore: ^5.5.1
+  google_sign_in: ^6.1.2
 
 dependency_overrides:
   http: 1.2.2

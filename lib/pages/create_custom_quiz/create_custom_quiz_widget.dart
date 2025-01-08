@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trivia_2/flutter_flow/drop_down.dart';
 import 'package:trivia_2/flutter_flow/icon_button.dart';
 import 'package:trivia_2/flutter_flow/model.dart';
@@ -8,11 +9,18 @@ import 'package:trivia_2/flutter_flow/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:trivia_2/pages/new_question/new_question_widget.dart';
+import 'package:trivia_2/reusables/menu.dart';
 import 'create_custom_quiz_model.dart';
 export 'create_custom_quiz_model.dart';
+import 'package:trivia_2/model/Question.dart';
 
 class CreateCustomQuizWidget extends StatefulWidget {
-  const CreateCustomQuizWidget({super.key});
+  final String userId;
+  final String quizTitle;
+  final String quizId;
+  const CreateCustomQuizWidget({Key? key, required this.quizTitle,required this.quizId, required this.userId}) : super(key: key);
+
 
   @override
   State<CreateCustomQuizWidget> createState() => _CreateCustomQuizWidgetState();
@@ -42,148 +50,10 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: MyAppTheme.of(context).primaryBackground,
-        drawer: Container(
-          width: 300.0,
-          child: Drawer(
-            elevation: 16.0,
-            child: Align(
-              alignment: AlignmentDirectional(-1.0, -1.0),
-              child: Container(
-                height: 876.0,
-                decoration: BoxDecoration(
-                  color: Color(0xFF1D5D8A),
-                ),
-                child: Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Opacity(
-                        opacity: 0.0,
-                        child: Divider(
-                          height: 50.0,
-                          thickness: 2.0,
-                          color: MyAppTheme.of(context).alternate,
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Profile');
-                        },
-                        text: 'Profile',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                              MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Quizzes');
-                        },
-                        text: 'Quizzes',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('PartyPage');
-                        },
-                        text: 'Party',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('About');
-                        },
-                        text: 'About',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        backgroundColor: MyAppTheme
+            .of(context)
+            .primaryBackground,
+        drawer: CustomDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xFF1D5D8A),
           automaticallyImplyLeading: false,
@@ -194,7 +64,9 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
             fillColor: Color(0xFF1D5D8A),
             icon: Icon(
               Icons.home_rounded,
-              color: MyAppTheme.of(context).info,
+              color: MyAppTheme
+                  .of(context)
+                  .info,
               size: 24.0,
             ),
             onPressed: () async {
@@ -209,7 +81,9 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
               fillColor: Color(0xFF1D5D8A),
               icon: Icon(
                 Icons.menu_rounded,
-                color: MyAppTheme.of(context).info,
+                color: MyAppTheme
+                    .of(context)
+                    .info,
                 size: 24.0,
               ),
               onPressed: () async {
@@ -221,228 +95,132 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
           elevation: 2.0,
         ),
         body: SafeArea(
-          top: true,
           child: Column(
-            mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
                 padding: EdgeInsets.all(12.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Opacity(
-                        opacity: 0.0,
-                        child: Divider(
-                          thickness: 2.0,
-                          color: MyAppTheme.of(context).alternate,
-                        ),
+                child: FFButtonWidget(
+                  onPressed: () async {
+                    final String questionId = FirebaseFirestore.instance
+                        .collection('quizzes')
+                        .doc()
+                        .id; // Generate a unique ID
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            NewQuestionWidget(
+                              quizId: widget.quizId, questionId: questionId,),
                       ),
-                      Align(
-                        alignment: AlignmentDirectional(0.0, 1.0),
-                        child: FFButtonWidget(
-                          onPressed: () async {
-                            context.pushNamed('NewQuestion');
-                          },
-                          text: 'New Question',
-                          icon: Icon(
-                            Icons.add_box,
-                            size: 15.0,
-                          ),
-                          options: FFButtonOptions(
-                            width: 400.0,
-                            height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 0.0, 16.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: Color(0xFF1D5D8A),
-                            textStyle: MyAppTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                  letterSpacing: 0.0,
-                                ),
-                            elevation: 0.0,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            Container(
-                              width: 400.0,
-                              height: 70.0,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFBED5DA),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Text(
-                                        'Question 1',
-                                        textAlign: TextAlign.center,
-                                        style: MyAppTheme.of(context)
-                                            .titleSmall
-                                            .override(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              letterSpacing: 0.0,
-                                            ),
-                                      ),
-                                    ),
-                                    DropDown<String>(
-                                      controller:
-                                          _model.dropDownValueController1 ??=
-                                              FormFieldController<String>(null),
-                                      options: List<String>.from(
-                                          ['A', 'B', 'C', 'D']),
-                                      optionLabels: ['A'],
-                                      onChanged: (val) => safeSetState(
-                                          () => _model.dropDownValue1 = val),
-                                      width: 400.0,
-                                      height: 40.0,
-                                      textStyle: MyAppTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Inter',
-                                            letterSpacing: 0.0,
-                                          ),
-                                      hintText: 'Answers',
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        color: MyAppTheme.of(context)
-                                            .secondaryText,
-                                        size: 24.0,
-                                      ),
-                                      fillColor: Color(0xFFBED5DA),
-                                      elevation: 2.0,
-                                      borderColor: Colors.transparent,
-                                      borderWidth: 0.0,
-                                      borderRadius: 8.0,
-                                      margin: EdgeInsetsDirectional.fromSTEB(
-                                          12.0, 0.0, 12.0, 0.0),
-                                      hidesUnderline: true,
-                                      isOverButton: false,
-                                      isSearchable: false,
-                                      isMultiSelect: false,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 400.0,
-                              height: 70.0,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFBED5DA),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Text(
-                                        'Question 2',
-                                        textAlign: TextAlign.center,
-                                        style: MyAppTheme.of(context)
-                                            .titleSmall
-                                            .override(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              letterSpacing: 0.0,
-                                            ),
-                                      ),
-                                    ),
-                                    DropDown<String>(
-                                      controller:
-                                          _model.dropDownValueController2 ??=
-                                              FormFieldController<String>(null),
-                                      options: List<String>.from(
-                                          ['A', 'B', 'C', 'D']),
-                                      optionLabels: ['A'],
-                                      onChanged: (val) => safeSetState(
-                                          () => _model.dropDownValue2 = val),
-                                      width: 400.0,
-                                      height: 40.0,
-                                      textStyle: MyAppTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Inter',
-                                            letterSpacing: 0.0,
-                                          ),
-                                      hintText: 'Answers',
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        color: MyAppTheme.of(context)
-                                            .secondaryText,
-                                        size: 24.0,
-                                      ),
-                                      fillColor: Color(0xFFBED5DA),
-                                      elevation: 2.0,
-                                      borderColor: Colors.transparent,
-                                      borderWidth: 0.0,
-                                      borderRadius: 8.0,
-                                      margin: EdgeInsetsDirectional.fromSTEB(
-                                          12.0, 0.0, 12.0, 0.0),
-                                      hidesUnderline: true,
-                                      isOverButton: false,
-                                      isSearchable: false,
-                                      isMultiSelect: false,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ].divide(SizedBox(height: 10.0)),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Quizzes');
-                        },
-                        text: 'Next step',
-                        icon: Icon(
-                          Icons.east,
-                          size: 15.0,
-                        ),
-                        options: FFButtonOptions(
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ].divide(SizedBox(height: 10.0)),
+                    );
+                  },
+                  text: 'New Question',
+                  icon: const Icon(Icons.add_box, size: 15.0),
+                  options: FFButtonOptions(
+                    width: double.infinity,
+                    height: 50.0,
+                    color: const Color(0xFF1D5D8A),
+                    textStyle: MyAppTheme
+                        .of(context)
+                        .titleSmall
+                        .override(
+                      fontFamily: 'Inter',
+                      color: Colors.white,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
               ),
-            ],
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('questions')
+                      .where('quizId', isEqualTo: widget.quizId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    final questions = snapshot.data!.docs;
+
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(12.0),
+                      itemCount: questions.length,
+                      itemBuilder: (context, index) {
+                        final question = questions[index];
+                        final questionData = question.data() as Map<String, dynamic>?;
+                        final questionText = questionData?['text'] ?? 'No text available';
+
+                        return ListTile(
+                          title: Text(questionText),
+                          trailing: StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('answers')
+                                .where('questionId', isEqualTo: question.id)
+                                .snapshots(),
+                            builder: (context, answerSnapshot) {
+                              if (!answerSnapshot.hasData) {
+                                return const CircularProgressIndicator();
+                              }
+
+                              final answers = answerSnapshot.data!.docs;
+
+                              if (answers.isEmpty) {
+                                return const Text("No answers available");
+                              }
+
+                              return DropdownButton<String>(
+                                items: answers.map<DropdownMenuItem<String>>((answerDoc) {
+                                  final answerData = answerDoc.data() as Map<String, dynamic>;
+                                  final answerText = answerData['text'] ?? 'No text';
+                                  return DropdownMenuItem<String>(
+                                    value: answerText,
+                                    child: Text(answerText),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  print('Selected answer: $value');
+                                },
+                                hint: const Text("Select an answer"),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              FFButtonWidget(
+                onPressed: () async {
+                  context.pushNamed('Quizzes');
+                },
+                text: 'Next step',
+                icon: Icon(
+                  Icons.east,
+                  size: 15.0,
+                ),
+                options: FFButtonOptions(
+                  height: 40.0,
+                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                      0.0, 0.0, 0.0, 0.0),
+                  color: Color(0xFF1D5D8A),
+                  textStyle:
+                  MyAppTheme
+                      .of(context)
+                      .titleSmall
+                      .override(
+                    fontFamily: 'Inter',
+                    color: Colors.white,
+                    letterSpacing: 0.0,
+                  ),
+                  elevation: 0.0,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ].divide(SizedBox(height: 10.0)),
           ),
         ),
       ),

@@ -10,7 +10,10 @@ import 'generate_quiz_model.dart';
 export 'generate_quiz_model.dart';
 
 class GenerateQuizWidget extends StatefulWidget {
-  const GenerateQuizWidget({super.key});
+  final String quizTitle;
+  final String quizId;
+  const GenerateQuizWidget({Key? key, required this.quizTitle,required this.quizId, required userId}) : super(key: key);
+
 
   @override
   State<GenerateQuizWidget> createState() => _GenerateQuizWidgetState();

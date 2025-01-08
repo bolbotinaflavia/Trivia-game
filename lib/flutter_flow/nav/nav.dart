@@ -70,32 +70,47 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'NewQuiz',
           path: '/newQuiz',
-          builder: (context, params) => NewQuizWidget(),
+          builder: (context, state){
+            final userId=(state.extra as Map<String,dynamic>)['userId'] as String;
+            return  NewQuizWidget(userId: userId,);
+},
         ),
         FFRoute(
           name: 'GenerateQuiz',
           path: '/generateQuiz',
-          builder: (context, params) => GenerateQuizWidget(),
+          builder: (context, state) {
+            final quizTitle = (state.extra as Map<String, dynamic>)['quizTitle'] as String;
+            final quizId=(state.extra as Map<String,dynamic>)['quizId'] as String;
+            final userId=(state.extra as Map<String,dynamic>)['userId'] as String;
+            return GenerateQuizWidget(quizTitle: quizTitle, quizId: quizId, userId: userId,);
+          },
         ),
         FFRoute(
           name: 'CreateCustomQuiz',
           path: '/createCustomQuiz',
-          builder: (context, params) => CreateCustomQuizWidget(),
+          builder: (context, state) {
+            final quizTitle = (state.extra as Map<String, dynamic>)['quizTitle'] as String;
+            final quizId=(state.extra as Map<String,dynamic>)['quizId'] as String;
+            final userId=(state.extra as Map<String,dynamic>)['userId'] as String;
+            return CreateCustomQuizWidget(quizTitle: quizTitle, quizId: quizId, userId: userId,);
+          },
         ),
         FFRoute(
           name: 'NewQuestion',
           path: '/newQuestion',
-          builder: (context, params) => NewQuestionWidget(),
+          builder: (context, state) {
+            return const NewQuestionWidget(quizId: '',questionId:'');
+          },
         ),
         FFRoute(
           name: 'NewAnswer',
           path: '/newAnswer',
-          builder: (context, params) => NewAnswerWidget(),
+          builder: (context, params) => NewAnswerWidget(quizId: '', questionId: '',),
         ),
         FFRoute(
           name: 'Startgame',
           path: '/startgame',
-          builder: (context, params) => StartgameWidget(),
+          builder: (context, params) => StartgameWidget(quizId:''),
         ),
         FFRoute(
           name: 'Gameplay',
@@ -190,6 +205,8 @@ class FFParameters {
 
   Map<String, dynamic> futureParamValues = {};
 
+  var params;
+
   // Parameters are empty if the params map is empty or if the only parameter
   // present is the special extra parameter reserved for the transition info.
   bool get isEmpty =>
@@ -199,6 +216,8 @@ class FFParameters {
   bool isAsyncParam(MapEntry<String, dynamic> param) =>
       asyncParams.containsKey(param.key) && param.value is String;
   bool get hasFutures => state.allParams.entries.any(isAsyncParam);
+
+  get extra => null;
   Future<bool> completeFutures() => Future.wait(
         state.allParams.entries.where(isAsyncParam).map(
           (param) async {
