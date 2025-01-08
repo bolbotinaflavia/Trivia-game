@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:trivia_2/flutter_flow/icon_button.dart';
 import 'package:trivia_2/flutter_flow/model.dart';
 import 'package:trivia_2/flutter_flow/theme.dart';
@@ -6,11 +8,16 @@ import 'package:trivia_2/flutter_flow/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import '../../model/Quiz.dart';
+import '../../reusables/menu.dart';
+import '../../reusables/quiz_card.dart';
+import '../startgame/startgame_widget.dart';
 import 'user_quizzes_model.dart';
 export 'user_quizzes_model.dart';
 
 class UserQuizzesWidget extends StatefulWidget {
-  const UserQuizzesWidget({super.key});
+  final String userId;
+  const UserQuizzesWidget({super.key, required this.userId});
 
   @override
   State<UserQuizzesWidget> createState() => _UserQuizzesWidgetState();
@@ -18,13 +25,30 @@ class UserQuizzesWidget extends StatefulWidget {
 
 class _UserQuizzesWidgetState extends State<UserQuizzesWidget> {
   late UserQuizzesModel _model;
+  bool isLoading = true;
+  List<Quiz> _quizzesList = [];
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  Future<void> fetchQuizzes() async {
+
+      final data = await FirebaseFirestore.instance
+          .collection("quizzes")
+          .where('creatorId', isEqualTo: widget.userId)
+          .orderBy('title', descending: true)
+          .get();
+
+      final quizzes = data.docs.map((doc) => Quiz.fromSnapshot(doc)).toList();
+      setState(() {
+        _quizzesList = quizzes;
+        isLoading = false;
+      });
+    }
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => UserQuizzesModel());
+    fetchQuizzes();
   }
 
   @override
@@ -36,152 +60,13 @@ class _UserQuizzesWidgetState extends State<UserQuizzesWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: MyAppTheme.of(context).secondaryBackground,
-        drawer: Container(
-          width: 300.0,
-          child: Drawer(
-            elevation: 16.0,
-            child: Align(
-              alignment: AlignmentDirectional(-1.0, -1.0),
-              child: Container(
-                height: 876.0,
-                decoration: BoxDecoration(
-                  color: Color(0xFF1D5D8A),
-                ),
-                child: Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Opacity(
-                        opacity: 0.0,
-                        child: Divider(
-                          height: 50.0,
-                          thickness: 2.0,
-                          color: MyAppTheme.of(context).alternate,
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Profile');
-                        },
-                        text: 'Profile',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Quizzes');
-                        },
-                        text: 'Quizzes',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('PartyPage');
-                        },
-                        text: 'Party',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('About');
-                        },
-                        text: 'About',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        drawer: CustomDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xFF1D5D8A),
           automaticallyImplyLeading: false,
@@ -222,174 +107,75 @@ class _UserQuizzesWidgetState extends State<UserQuizzesWidget> {
           top: true,
           child: Padding(
             padding: EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    color: Color(0xFF1D5D8A),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(60.0),
-                        child: Image.asset(
-                          'assets/images/pin6.jpg',
-                          width: 100.0,
-                          height: 100.0,
-                          fit: BoxFit.cover,
-                        ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Card(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  color: Color(0xFF1D5D8A),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(2.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(60.0),
+                      child: Image.asset(
+                        'assets/images/pin6.jpg',
+                        width: 100.0,
+                        height: 100.0,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 0.0),
-                    child: Text(
-                      'Username',
-                      style:
-                      MyAppTheme.of(context).headlineSmall.override(
-                                fontFamily: 'Readex Pro',
-                                letterSpacing: 0.0,
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 0.0),
+                  child: Text(
+                    'Username',
+                    style: MyAppTheme.of(context).headlineSmall.override(
+                      fontFamily: 'Readex Pro',
+                      letterSpacing: 0.0,
+                    ),
+                  ),
+                ),
+                Divider(
+                  height: 44.0,
+                  thickness: 1.0,
+                  indent: 24.0,
+                  endIndent: 24.0,
+                  color: MyAppTheme.of(context).alternate,
+                ),
+                // Replace Expanded with Flexible or remove SingleChildScrollView
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _quizzesList.isEmpty
+                    ? const Center(child: Text('No quizzes found.'))
+                    : Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(12.0),
+                    itemCount: _quizzesList.length,
+                    itemBuilder: (context, index) {
+                      final quiz = _quizzesList[index];
+                      return QuizCard(
+                        quiz: quiz,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => StartgameWidget(
+                                userId: widget.userId,
+                                quizId: quiz.quizId.toString(),
+                                quizTitle: quiz.title.toString(),
                               ),
-                    ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
-                  Divider(
-                    height: 44.0,
-                    thickness: 1.0,
-                    indent: 24.0,
-                    endIndent: 24.0,
-                    color: MyAppTheme.of(context).alternate,
-                  ),
-                  ListView(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            16.0, 12.0, 16.0, 0.0),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: MyAppTheme.of(context)
-                                .secondaryBackground,
-                            borderRadius: BorderRadius.circular(12.0),
-                            border: Border.all(
-                              color: Color(0xFFBED5DA),
-                              width: 2.0,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                8.0, 12.0, 8.0, 12.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 0.0, 0.0, 0.0),
-                                  child: Text(
-                                    'Quiz 1',
-                                    style: MyAppTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Inter',
-                                          letterSpacing: 0.0,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            16.0, 12.0, 16.0, 0.0),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: MyAppTheme.of(context)
-                                .secondaryBackground,
-                            borderRadius: BorderRadius.circular(12.0),
-                            border: Border.all(
-                              color: Color(0xFFBED5DA),
-                              width: 2.0,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                8.0, 12.0, 8.0, 12.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 0.0, 0.0, 0.0),
-                                  child: Text(
-                                    'Quiz 2',
-                                    style: MyAppTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Inter',
-                                          letterSpacing: 0.0,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            16.0, 12.0, 16.0, 0.0),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: MyAppTheme.of(context)
-                                .secondaryBackground,
-                            borderRadius: BorderRadius.circular(12.0),
-                            border: Border.all(
-                              color: Color(0xFFBED5DA),
-                              width: 2.0,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                8.0, 12.0, 8.0, 12.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 0.0, 0.0, 0.0),
-                                  child: Text(
-                                    'Quizz 3',
-                                    style: MyAppTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Inter',
-                                          letterSpacing: 0.0,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ].divide(SizedBox(height: 12.0)),
-              ),
+                ),
+              ],
             ),
           ),
         ),

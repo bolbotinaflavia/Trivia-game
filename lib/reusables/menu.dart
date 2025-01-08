@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trivia_2/index.dart';
 import '../flutter_flow/theme.dart';
 import '../flutter_flow/widgets.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    late User currentUser;
+    final user = _auth.currentUser;
+    currentUser = user!;
+
     return Container(
       width: 300.0,
       child: Drawer(
@@ -21,7 +29,16 @@ class CustomDrawer extends StatelessWidget {
             children: [
               const SizedBox(height: 50), // Top padding
               FFButtonWidget(
-                onPressed: () => context.pushNamed('Profile'),
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ProfileWidget(
+                        userId: currentUser.uid.toString(),
+                      ),
+                    ),
+                  );
+                },
                 text: 'Profile',
                 options: _drawerButtonOptions(context),
               ),

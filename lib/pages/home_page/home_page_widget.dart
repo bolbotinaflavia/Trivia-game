@@ -6,6 +6,7 @@ import 'package:trivia_2/flutter_flow/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:trivia_2/pages/history/history_widget.dart';
 import '../../reusables/menu.dart';
 import 'home_page_model.dart';
 export 'home_page_model.dart';
@@ -20,8 +21,10 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoading = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  late User currentUser;
 
   @override
   void initState() {
@@ -38,6 +41,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+      final user = _auth.currentUser;
+        currentUser = user!;
+
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -230,27 +237,43 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   ),
                                   Padding(
                                     padding: EdgeInsets.all(12.0),
-                                    child: Container(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFBED5DA),
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                        shape: BoxShape.rectangle,
-                                      ),
-                                      child: Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Text(
-                                          'History',
-                                          style: MyAppTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Roboto',
-                                                fontSize: 20.0,
-                                                letterSpacing: 0.0,
-                                              ),
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => HistoryWidget(
+                                               userId: currentUser.uid.toString(),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 50.0,
+                                        height: 50.0,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFBED5DA),
+                                          borderRadius:
+                                          BorderRadius.circular(18.0),
+                                          shape: BoxShape.rectangle,
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                          AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            'History',
+                                            style: MyAppTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 20.0,
+                                              letterSpacing: 0.0,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),

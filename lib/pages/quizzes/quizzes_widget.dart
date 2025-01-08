@@ -154,10 +154,11 @@ class _QuizzesWidgetState extends State<QuizzesWidget> {
                     return QuizCard(
                       quiz: quiz,
                       onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          'Startgame',
-                          arguments: quiz.quizId, // Pass a String instead of Map
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (_) => StartgameWidget(userId:currentUser.uid.toString(), quizId: quiz.quizId.toString(), quizTitle: quiz.title.toString(),),
+                        ),
                         );
                       },
                     );

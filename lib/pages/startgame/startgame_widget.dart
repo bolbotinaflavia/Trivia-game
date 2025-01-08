@@ -6,12 +6,16 @@ import 'package:trivia_2/flutter_flow/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:trivia_2/index.dart';
+import '../../reusables/menu.dart';
 import 'startgame_model.dart';
 export 'startgame_model.dart';
 
 class StartgameWidget extends StatefulWidget {
-  final Strind quizId;
-  const StartgameWidget({super.key});
+  final String quizId;
+  final String quizTitle;
+  final String userId;
+  const StartgameWidget({super.key, required this.quizId, required this.quizTitle, required this.userId});
 
   @override
   State<StartgameWidget> createState() => _StartgameWidgetState();
@@ -93,7 +97,7 @@ class _StartgameWidgetState extends State<StartgameWidget> {
                   Align(
                     alignment: AlignmentDirectional(0.0, 0.0),
                     child: Text(
-                      'Quiz 1',
+                      widget.quizTitle,
                       style: MyAppTheme.of(context).displayLarge.override(
                             fontFamily: 'Readex Pro',
                             letterSpacing: 0.0,
@@ -112,7 +116,11 @@ class _StartgameWidgetState extends State<StartgameWidget> {
                         size: 40.0,
                       ),
                       onPressed: () async {
-                        context.pushNamed('Gameplay');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (_) => GameplayWidget(quizId: widget.quizId, userId: widget.userId, quizTitle: widget.quizTitle)),
+                        );
                       },
                     ),
                   ),

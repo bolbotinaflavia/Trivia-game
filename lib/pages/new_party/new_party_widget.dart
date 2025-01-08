@@ -9,6 +9,7 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import '../../reusables/menu.dart';
 import 'new_party_model.dart';
 export 'new_party_model.dart';
 
@@ -44,147 +45,7 @@ class _NewPartyWidgetState extends State<NewPartyWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: MyAppTheme.of(context).primaryBackground,
-        drawer: Container(
-          width: 300.0,
-          child: Drawer(
-            elevation: 16.0,
-            child: Align(
-              alignment: AlignmentDirectional(-1.0, -1.0),
-              child: Container(
-                height: 876.0,
-                decoration: BoxDecoration(
-                  color: Color(0xFF1D5D8A),
-                ),
-                child: Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Opacity(
-                        opacity: 0.0,
-                        child: Divider(
-                          height: 50.0,
-                          thickness: 2.0,
-                          color: MyAppTheme.of(context).alternate,
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Profile');
-                        },
-                        text: 'Profile',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('Quizzes');
-                        },
-                        text: 'Quizzes',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('PartyPage');
-                        },
-                        text: 'Party',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          context.pushNamed('About');
-                        },
-                        text: 'About',
-                        options: FFButtonOptions(
-                          width: 300.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF1D5D8A),
-                          textStyle:
-                          MyAppTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Color(0xFF0D5A8E),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        drawer: CustomDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xFF1D5D8A),
           automaticallyImplyLeading: false,

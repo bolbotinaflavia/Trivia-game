@@ -12,6 +12,9 @@ import 'package:trivia_2/flutter_flow/lat_lng.dart';
 import 'package:trivia_2/flutter_flow/place.dart';
 import 'package:trivia_2/flutter_flow/util.dart';
 import 'package:trivia_2/flutter_flow/nav/serialization_util.dart';
+import 'package:trivia_2/pages/quizResult/quiz_result_widget.dart';
+
+import '../../pages/history/history_widget.dart';
 
 export 'package:go_router/go_router.dart';
 
@@ -68,6 +71,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => QuizzesWidget(),
         ),
         FFRoute(
+          name: 'History',
+          path: '/history',
+          builder: (context, params) => HistoryWidget(userId: '',),
+        ),
+        FFRoute(
           name: 'NewQuiz',
           path: '/newQuiz',
           builder: (context, state){
@@ -108,24 +116,29 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => NewAnswerWidget(quizId: '', questionId: '',),
         ),
         FFRoute(
-          name: 'Startgame',
+          name:'Startgame',
           path: '/startgame',
-          builder: (context, params) => StartgameWidget(quizId:''),
+          builder: (context, params) => GameplayWidget(quizId: '', quizTitle: '', userId: ''),
         ),
         FFRoute(
           name: 'Gameplay',
           path: '/gameplay',
-          builder: (context, params) => GameplayWidget(),
+          builder: (context, params) => StartgameWidget(quizId: '', quizTitle: '', userId: ''),
+        ),
+        FFRoute(
+          name: 'QuizResult',
+          path: '/quizresult',
+          builder: (context, params) => QuizResultWidget(score: 0, totalQuestions: 0, quizTitle: ''),
         ),
         FFRoute(
           name: 'Profile',
           path: '/profile',
-          builder: (context, params) => ProfileWidget(),
+          builder: (context, params) => ProfileWidget(userId:''),
         ),
         FFRoute(
           name: 'UserQuizzes',
           path: '/userQuizzes',
-          builder: (context, params) => UserQuizzesWidget(),
+          builder: (context, params) => UserQuizzesWidget(userId:''),
         ),
         FFRoute(
           name: 'UserFriends',
