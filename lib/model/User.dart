@@ -7,7 +7,8 @@ class Users {
   List<String>? quizzes;
   List<String>? partiesCreated;
   List<String>? partiesJoined;
-  String? photoUrl;
+  String? uploadedImage;
+  String? bio;
 
   Users({
     this.userName,
@@ -15,7 +16,8 @@ class Users {
     this.quizzes,
     this.partiesCreated,
     this.partiesJoined,
-    this.photoUrl,
+    this.uploadedImage,
+    this.bio,
   });
 
   Users.fromSnapshot(DocumentSnapshot snapshot)
@@ -24,7 +26,8 @@ class Users {
         quizzes = List<String>.from(snapshot['quizzes'] ?? []),
         partiesCreated = List<String>.from(snapshot['partiesCreated'] ?? []),
         partiesJoined = List<String>.from(snapshot['partiesJoined'] ?? []),
-        photoUrl=snapshot['photoUrl'];
+        uploadedImage=snapshot['uploadedImage'],
+        bio=snapshot['bio'];
 
   Map<String, dynamic> toFirestore() {
     return {
@@ -33,7 +36,8 @@ class Users {
       if (quizzes != null) 'quizzes': quizzes,
       if (partiesCreated != null) 'partiesCreated': partiesCreated,
       if (partiesJoined != null) 'partiesJoined': partiesJoined,
-      if(photoUrl!=null)'photoUrl':photoUrl,
+      if(uploadedImage!=null)'photoUrl':uploadedImage,
+      if(bio!=null)'bio':bio,
     };
   }
 }

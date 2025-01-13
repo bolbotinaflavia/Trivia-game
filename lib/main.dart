@@ -9,9 +9,12 @@ import 'flutter_flow/nav/nav.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'firebase_options.dart';
 import 'index.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized(); // Ensure all Flutter bindings are initialized before calling Firebase
+  //await dotenv.load();
   await firebase_core.Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform, // Use platform-specific options from firebase_options.dart
   );

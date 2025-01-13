@@ -28,6 +28,8 @@ class _UserQuizzesWidgetState extends State<UserQuizzesWidget> {
   bool isLoading = true;
   List<Quiz> _quizzesList = [];
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  late final User currentUser;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> fetchQuizzes() async {
 
@@ -49,6 +51,7 @@ class _UserQuizzesWidgetState extends State<UserQuizzesWidget> {
     super.initState();
     _model = createModel(context, () => UserQuizzesModel());
     fetchQuizzes();
+    currentUser=_auth.currentUser!;
   }
 
   @override
@@ -164,7 +167,7 @@ class _UserQuizzesWidgetState extends State<UserQuizzesWidget> {
                             context,
                             MaterialPageRoute(
                               builder: (_) => StartgameWidget(
-                                userId: widget.userId,
+                                userId: currentUser.uid.toString(),
                                 quizId: quiz.quizId.toString(),
                                 quizTitle: quiz.title.toString(),
                               ),

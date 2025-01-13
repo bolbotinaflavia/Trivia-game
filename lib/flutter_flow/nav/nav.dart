@@ -12,8 +12,13 @@ import 'package:trivia_2/flutter_flow/lat_lng.dart';
 import 'package:trivia_2/flutter_flow/place.dart';
 import 'package:trivia_2/flutter_flow/util.dart';
 import 'package:trivia_2/flutter_flow/nav/serialization_util.dart';
+import 'package:trivia_2/pages/add_friends_to_party/add_friends_to_party_widget.dart';
+import 'package:trivia_2/pages/friend_profile/friend_profile_widget.dart';
+import 'package:trivia_2/pages/gameplayparty/gameplay_party_widget.dart';
 import 'package:trivia_2/pages/quizResult/quiz_result_widget.dart';
 
+import '../../pages/addFriend/add_friend_widget.dart';
+import '../../pages/discover/discover_widget.dart';
 import '../../pages/history/history_widget.dart';
 
 export 'package:go_router/go_router.dart';
@@ -51,6 +56,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => StartPageWidget(),
         ),
         FFRoute(
+          name: 'AddFriendPage',
+          path: '/addfriendpage',
+          builder: (context, params) => AddFriendWidget( userId: '',),
+        ),
+        FFRoute(
           name: 'Authenticate',
           path: '/authenticate',
           builder: (context, params) => AuthenticateWidget(),
@@ -64,6 +74,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'HomePage',
           path: '/homePage',
           builder: (context, params) => HomePageWidget(),
+        ),
+        FFRoute(
+          name: 'Discover',
+          path: '/discover',
+          builder: (context, params) => DiscoverWidget(userId: '',),
         ),
         FFRoute(
           name: 'Quizzes',
@@ -141,9 +156,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => UserQuizzesWidget(userId:''),
         ),
         FFRoute(
+          name: 'FriendProfile',
+          path: '/friendprofile',
+          builder: (context, params) => FriendProfileWidget(userId:''),
+        ),
+        FFRoute(
           name: 'UserFriends',
           path: '/userFriends',
-          builder: (context, params) => UserFriendsWidget(),
+          builder: (context, params) => UserFriendsWidget(userId:''),
         ),
         FFRoute(
           name: 'EditProfile',
@@ -158,17 +178,27 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'CreateParty',
           path: '/createParty',
-          builder: (context, params) => CreatePartyWidget(),
+          builder: (context, params) => CreatePartyWidget(userId: '',),
+        ),
+        FFRoute(
+          name: 'GameplayParty',
+          path: '/gameplayParty',
+          builder: (context, params) => GameplayPartyWidget(quizId: '', userId: '', quizTitle: '', partyId: '',),
         ),
         FFRoute(
           name: 'NewParty',
           path: '/newParty',
-          builder: (context, params) => NewPartyWidget(),
+          builder: (context, params) => NewPartyWidget(partyId:'',userId:''),
+        ),
+        FFRoute(
+          name: 'AddFriendsToParty',
+          path: '/addfriendstoparty',
+          builder: (context, params) => AddFriendsToPartyWidget(partyId:''),
         ),
         FFRoute(
           name: 'Party',
           path: '/party',
-          builder: (context, params) => PartyWidget(),
+          builder: (context, params) => PartyWidget(userId: '', partyId: '',),
         ),
         FFRoute(
           name: 'About',

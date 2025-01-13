@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:trivia_2/flutter_flow/icon_button.dart';
 import 'package:trivia_2/flutter_flow/model.dart';
 import 'package:trivia_2/flutter_flow/theme.dart';
@@ -6,7 +8,11 @@ import 'package:trivia_2/flutter_flow/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import '../../model/Party.dart';
 import '../../reusables/menu.dart';
+import '../../reusables/party_card.dart';
+import '../create_party/create_party_widget.dart';
+import '../party/party_widget.dart';
 import 'party_page_model.dart';
 export 'party_page_model.dart';
 
@@ -20,12 +26,47 @@ class PartyPageWidget extends StatefulWidget {
 class _PartyPageWidgetState extends State<PartyPageWidget> {
   late PartyPageModel _model;
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoading = true;
+  List<Party> _partiesList = [];
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  late User currentUser;
+
+  Future<void> fetchParties() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+      currentUser = user;
+
+      final data = await FirebaseFirestore.instance
+          .collection("parties")
+          .where('creatorId', isEqualTo: currentUser.uid)
+          .orderBy('name', descending: true)
+          .get();
+
+      final parties = data.docs.map((doc) => Party.fromSnapshot(doc)).toList();
+      setState(() {
+        _partiesList = parties;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching parties: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => PartyPageModel());
+    fetchParties();
   }
 
   @override
@@ -80,250 +121,63 @@ class _PartyPageWidgetState extends State<PartyPageWidget> {
           elevation: 2.0,
         ),
         body: SafeArea(
-          top: true,
-          child: Padding(
-            padding: EdgeInsets.all(12.0),
-            child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Opacity(
-                    opacity: 0.0,
-                    child: Divider(
-                      thickness: 2.0,
-                      color: MyAppTheme.of(context).alternate,
-                    ),
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional(0.0, -1.0),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
                     child: FFButtonWidget(
-                      onPressed: () async {
-                        context.pushNamed('CreateParty');
+                      onPressed: () async=> {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => CreatePartyWidget(userId: currentUser.uid,)
+                          ),
+                        ),
                       },
                       text: 'New Party',
-                      icon: Icon(
-                        Icons.add_box,
-                        size: 15.0,
-                      ),
+                      icon: const Icon(Icons.add_box, size: 15.0),
                       options: FFButtonOptions(
-                        width: 400.0,
-                        height: 40.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            16.0, 0.0, 16.0, 0.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: Color(0xFF1D5D8A),
-                        textStyle:
-                        MyAppTheme.of(context).titleSmall.override(
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                  letterSpacing: 0.0,
-                                ),
-                        elevation: 0.0,
+                        width: double.infinity,
+                        height: 50.0,
+                        color: const Color(0xFF1D5D8A),
+                        textStyle: MyAppTheme.of(context).titleSmall.override(
+                          fontFamily: 'Inter',
+                          color: Colors.white,
+                        ),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      children: [
-                        Container(
-                          width: 100.0,
-                          height: 100.0,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFBED5DA),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(6.0),
-                                  child: Container(
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Image.asset(
-                                      'assets/images/frog.jpg',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Text(
-                                          'Party 1',
-                                          style: MyAppTheme.of(context)
-                                              .titleLarge
-                                              .override(
-                                                fontFamily: 'Readex Pro',
-                                                letterSpacing: 0.0,
-                                              ),
-                                        ),
-                                      ),
-                                      Text(
-                                        'Descriere',
-                                        style: MyAppTheme.of(context)
-                                            .bodySmall
-                                            .override(
-                                              fontFamily: 'Inter',
-                                              letterSpacing: 0.0,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ].divide(SizedBox(width: 12.0)),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 100.0,
-                          height: 100.0,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFBED5DA),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(6.0),
-                                  child: Container(
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Image.asset(
-                                      'assets/images/frog.jpg',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Text(
-                                          'Party 1',
-                                          style: MyAppTheme.of(context)
-                                              .titleLarge
-                                              .override(
-                                                fontFamily: 'Readex Pro',
-                                                letterSpacing: 0.0,
-                                              ),
-                                        ),
-                                      ),
-                                      Text(
-                                        'Descriere',
-                                        style: MyAppTheme.of(context)
-                                            .bodySmall
-                                            .override(
-                                              fontFamily: 'Inter',
-                                              letterSpacing: 0.0,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ].divide(SizedBox(width: 12.0)),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 100.0,
-                          height: 100.0,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFBED5DA),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(6.0),
-                                  child: Container(
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Image.asset(
-                                      'assets/images/frog.jpg',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Text(
-                                          'Party 1',
-                                          style: MyAppTheme.of(context)
-                                              .titleLarge
-                                              .override(
-                                                fontFamily: 'Readex Pro',
-                                                letterSpacing: 0.0,
-                                              ),
-                                        ),
-                                      ),
-                                      Text(
-                                        'Descriere',
-                                        style: MyAppTheme.of(context)
-                                            .bodySmall
-                                            .override(
-                                              fontFamily: 'Inter',
-                                              letterSpacing: 0.0,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ].divide(SizedBox(width: 12.0)),
-                            ),
-                          ),
-                        ),
-                      ].divide(SizedBox(height: 10.0)),
+                  Expanded(
+                    child: isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : _partiesList.isEmpty
+                        ? const Center(child: Text('No parties found.'))
+                        : ListView.builder(
+                      padding: const EdgeInsets.all(12.0),
+                      itemCount: _partiesList.length,
+                      itemBuilder: (context, index) {
+                        final party = _partiesList[index];
+                        return PartyCard(
+                          party: party,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => PartyWidget(userId:currentUser.uid.toString(), partyId: party.partyId.toString()),
+                              ),
+                            );
+                          },
+                        );
+                      },
                     ),
                   ),
-                ].divide(SizedBox(height: 10.0)),
+                ],
               ),
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

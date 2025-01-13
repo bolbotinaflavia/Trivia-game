@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trivia_2/flutter_flow/choice_chips.dart';
 import 'package:trivia_2/flutter_flow/icon_button.dart';
 import 'package:trivia_2/flutter_flow/model.dart';
@@ -8,12 +9,19 @@ import 'package:trivia_2/flutter_flow/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:trivia_2/index.dart';
+import 'package:trivia_2/pages/gameplayparty/gameplay_party_widget.dart';
+import '../../model/Quiz.dart';
 import '../../reusables/menu.dart';
+import '../../reusables/quiz_card.dart';
 import 'party_model.dart';
 export 'party_model.dart';
 
 class PartyWidget extends StatefulWidget {
-  const PartyWidget({super.key});
+  final String userId;
+  final String partyId;
+
+  const PartyWidget({super.key, required this.userId, required this.partyId});
 
   @override
   State<PartyWidget> createState() => _PartyWidgetState();
@@ -21,19 +29,66 @@ class PartyWidget extends StatefulWidget {
 
 class _PartyWidgetState extends State<PartyWidget> {
   late PartyModel _model;
+  int participantsCount = 0;
+  int participantLimit = 0;
+  List<dynamic> partyUsers = []; // List of users in the party
+  bool isLoading = true;
+  List<Quiz> _quizzesList = [];
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => PartyModel());
+    _fetchPartyDetails();
+  }
+
+  Future<void> _fetchPartyDetails() async {
+    try {
+      final partyDoc = await FirebaseFirestore.instance
+          .collection('parties')
+          .doc(widget.partyId)
+          .get();
+
+      if (partyDoc.exists) {
+        final data = partyDoc.data()!;
+        setState(() {
+          participantsCount = (data['users'] as List).length;
+          participantLimit = data['participants'] ?? 0;
+          partyUsers = data['users'] ?? [];
+        });
+
+        // Fetch quizzes from all party users
+        _fetchQuizzes();
+      }
+    } catch (e) {
+      print('Error fetching party details: $e');
+    }
+  }
+
+  Future<void> _fetchQuizzes() async {
+    try {
+      if (partyUsers.isNotEmpty) {
+        final quizDocs = await FirebaseFirestore.instance
+            .collection('quizzes')
+            .where('creatorId', whereIn: partyUsers)
+            .get();
+        final quizzes = quizDocs.docs.map((doc) => Quiz.fromSnapshot(doc)).toList();
+        setState(() {
+          _quizzesList = quizzes;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error fetching quizzes: $e');
+    }
   }
 
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
@@ -46,13 +101,13 @@ class _PartyWidgetState extends State<PartyWidget> {
         backgroundColor: MyAppTheme.of(context).primaryBackground,
         drawer: CustomDrawer(),
         appBar: AppBar(
-          backgroundColor: Color(0xFF1D5D8A),
+          backgroundColor: const Color(0xFF1D5D8A),
           automaticallyImplyLeading: false,
           leading: MyAppIconButton(
             borderColor: Colors.transparent,
             borderRadius: 8.0,
             buttonSize: 40.0,
-            fillColor: Color(0xFF1D5D8A),
+            fillColor: const Color(0xFF1D5D8A),
             icon: Icon(
               Icons.home_rounded,
               color: MyAppTheme.of(context).info,
@@ -67,7 +122,7 @@ class _PartyWidgetState extends State<PartyWidget> {
               borderColor: Colors.transparent,
               borderRadius: 8.0,
               buttonSize: 40.0,
-              fillColor: Color(0xFF1D5D8A),
+              fillColor: const Color(0xFF1D5D8A),
               icon: Icon(
                 Icons.menu_rounded,
                 color: MyAppTheme.of(context).info,
@@ -83,143 +138,98 @@ class _PartyWidgetState extends State<PartyWidget> {
         ),
         body: SafeArea(
           top: true,
-          child: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
-                    child: ChoiceChips(
-                      options: [ChipData('12'), ChipData('30')],
-                      onChanged: (val) => safeSetState(
-                          () => _model.choiceChipsValue = val?.firstOrNull),
-                      selectedChipStyle: ChipStyle(
-                        backgroundColor: Color(0xFF1D5D8A),
-                        textStyle:
-                        MyAppTheme.of(context).bodyMedium.override(
-                                  fontFamily: 'Inter',
-                                  color: MyAppTheme.of(context).info,
-                                  letterSpacing: 0.0,
-                                ),
-                        iconColor: MyAppTheme.of(context).info,
-                        iconSize: 16.0,
-                        elevation: 0.0,
-                        borderRadius: BorderRadius.circular(8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Chips to show connected participants
+                // Wrap(
+                //   spacing: 8.0,
+                //   runSpacing: 8.0,
+                //   children: partyUsers.map<Widget>((user) {
+                //     return Chip(
+                //       label: Text(user),
+                //       backgroundColor: const Color(0xFFBED5DA),
+                //     );
+                //   }).toList(),
+                // ),
+                const SizedBox(height: 16.0),
+                Align(
+                  alignment: AlignmentDirectional.center,
+                  child: Chip(
+                    backgroundColor: const Color(0xFF1D5D8A),
+                    label: Text(
+                      '$participantsCount / $participantLimit',
+                      style: MyAppTheme.of(context).bodyMedium.override(
+                        fontFamily: 'Inter',
+                        color: Colors.white,
+                        letterSpacing: 0.0,
                       ),
-                      unselectedChipStyle: ChipStyle(
-                        backgroundColor: Color(0xFFBED5DA),
-                        textStyle: MyAppTheme.of(context)
-                            .bodyMedium
-                            .override(
-                              fontFamily: 'Inter',
-                              color: MyAppTheme.of(context).secondaryText,
-                              letterSpacing: 0.0,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24.0),
+                Text(
+                  'Available Quizzes',
+                  style: MyAppTheme.of(context).headlineSmall.override(
+                    fontFamily: 'Readex Pro',
+                    letterSpacing: 0.0,
+                  ),
+                ),
+                Expanded(
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : _quizzesList.isEmpty
+                      ? const Center(child: Text('No quizzes found.'))
+                      : ListView.builder(
+                    padding: const EdgeInsets.all(12.0),
+                    itemCount: _quizzesList.length,
+                    itemBuilder: (context, index) {
+                      final quiz = _quizzesList[index];
+                      return QuizCard(
+                        quiz: quiz,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => GameplayPartyWidget(userId:widget.userId.toString(), quizId: quiz.quizId.toString(), quizTitle: quiz.title.toString(), partyId: widget.partyId,),
                             ),
-                        iconColor: Colors.black,
-                        iconSize: 16.0,
-                        elevation: 0.0,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      chipSpacing: 8.0,
-                      rowSpacing: 8.0,
-                      multiselect: false,
-                      alignment: WrapAlignment.start,
-                      controller: _model.choiceChipsValueController ??=
-                          FormFieldController<List<String>>(
-                        [],
-                      ),
-                      wrapped: true,
-                    ),
-                  ),
-                  Opacity(
-                    opacity: 0.0,
-                    child: Divider(
-                      height: 70.0,
-                      thickness: 2.0,
-                      color: MyAppTheme.of(context).alternate,
-                    ),
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
-                    child: Text(
-                      'Your quizzes',
-                      style:
-                      MyAppTheme.of(context).headlineLarge.override(
-                                fontFamily: 'Readex Pro',
-                                letterSpacing: 0.0,
-                              ),
-                    ),
-                  ),
-                  Container(
-                    width: 100.0,
-                    height: 100.0,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFBED5DA),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Text(
-                        'Quiz 1',
-                        style: MyAppTheme.of(context).titleSmall.override(
-                              fontFamily: 'Inter',
-                              color: Colors.black,
-                              letterSpacing: 0.0,
-                            ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 100.0,
-                    height: 100.0,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFBED5DA),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Text(
-                        'Quiz 1',
-                        style: MyAppTheme.of(context).titleSmall.override(
-                              fontFamily: 'Inter',
-                              color: Colors.black,
-                              letterSpacing: 0.0,
-                            ),
-                      ),
-                    ),
-                  ),
-                  FFButtonWidget(
-                    onPressed: () async {
-                      context.pushNamed('Gameplay');
+                          );
+                        },
+                      );
                     },
-                    text: 'Next step',
-                    icon: Icon(
-                      Icons.east,
-                      size: 15.0,
-                    ),
-                    options: FFButtonOptions(
-                      height: 40.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: Color(0xFF1D5D8A),
-                      textStyle:
-                      MyAppTheme.of(context).titleSmall.override(
-                                fontFamily: 'Inter',
-                                color: Colors.white,
-                                letterSpacing: 0.0,
-                              ),
-                      elevation: 0.0,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
                   ),
-                ].divide(SizedBox(height: 12.0)),
-              ),
+                ),
+                const SizedBox(height: 16.0),
+                FFButtonWidget(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>NewPartyWidget(
+                          partyId: widget.partyId,
+                          userId: widget.userId,
+                        ),
+                      ),
+                    );
+                  },
+                  text: 'Back to QR Code',
+                  icon: const Icon(Icons.qr_code, size: 15.0),
+                  options: FFButtonOptions(
+                    height: 40.0,
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    color: const Color(0xFF1D5D8A),
+                    textStyle: MyAppTheme.of(context).titleSmall.override(
+                      fontFamily: 'Inter',
+                      color: Colors.white,
+                      letterSpacing: 0.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

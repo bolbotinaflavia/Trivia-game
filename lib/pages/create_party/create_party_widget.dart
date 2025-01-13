@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trivia_2/flutter_flow/icon_button.dart';
 import 'package:trivia_2/flutter_flow/model.dart';
 import 'package:trivia_2/flutter_flow/theme.dart';
@@ -6,12 +7,14 @@ import 'package:trivia_2/flutter_flow/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:trivia_2/index.dart';
 import '../../reusables/menu.dart';
 import 'create_party_model.dart';
 export 'create_party_model.dart';
 
 class CreatePartyWidget extends StatefulWidget {
-  const CreatePartyWidget({super.key});
+  final String userId;
+  const CreatePartyWidget({super.key, required this.userId});
 
   @override
   State<CreatePartyWidget> createState() => _CreatePartyWidgetState();
@@ -29,7 +32,7 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
 
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
-
+    _model.sliderValue = 5.0; // Default value for the counter
     _model.switchValue = true;
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -204,17 +207,37 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                           letterSpacing: 0.0,
                         ),
                   ),
-                  Slider(
-                    activeColor: Color(0xFF1D5D8A),
-                    inactiveColor: MyAppTheme.of(context).alternate,
-                    min: 0.0,
-                    max: 10.0,
-                    value: _model.sliderValue ??= 5.0,
-                    onChanged: (newValue) {
-                      newValue = double.parse(newValue.toStringAsFixed(2));
-                      safeSetState(() => _model.sliderValue = newValue);
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (_model.sliderValue! > 1) {
+                            safeSetState(() {
+                              _model.sliderValue = _model.sliderValue! - 1;
+                            });
+                          }
+                        },
+                        icon: Icon(Icons.remove, color: Color(0xFF1D5D8A)),
+                      ),
+                      Text(
+                        _model.sliderValue!.toInt().toString(),
+                        style: MyAppTheme.of(context).headlineMedium.override(
+                          fontFamily: 'Readex Pro',
+                          color: MyAppTheme.of(context).primaryText,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          safeSetState(() {
+                            _model.sliderValue = _model.sliderValue! + 1;
+                          });
+                        },
+                        icon: Icon(Icons.add, color: Color(0xFF1D5D8A)),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 16),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -243,7 +266,44 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                   ),
                   FFButtonWidget(
                     onPressed: () async {
-                      context.pushNamed('NewParty');
+                      if (_model.textController!.text.trim().isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please name your party.')),
+                        );
+                        return;
+                      }
+                      try {
+                        final partyId = FirebaseFirestore.instance
+                            .collection('parties')
+                            .doc()
+                            .id;
+                        final partyDoc = await FirebaseFirestore.instance.collection('parties')
+                          .doc(partyId)
+                          .set({
+                          'partyId':partyId,
+                          'name': _model.textController!.text.trim(),
+                          'creatorId': widget.userId,
+                          'participants': _model.sliderValue!.toInt(),
+                          'users':[widget.userId,],
+                          'remember': _model.switchValue,
+                          'photoUrl': '',
+                        });
+                        // Navigate to the next page with the party ID
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NewPartyWidget(
+                              partyId: partyId, userId: widget.userId,
+                          ),
+                        ),
+                        );
+                      } catch (e) {
+                        print('Error creating party: $e');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Failed to create party. Try again.')),
+                        );
+                      }
+
                     },
                     text: 'Next step',
                     icon: Icon(

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trivia_2/flutter_flow/icon_button.dart';
 import 'package:trivia_2/flutter_flow/model.dart';
 import 'package:trivia_2/flutter_flow/theme.dart';
@@ -8,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:trivia_2/pages/history/history_widget.dart';
 import '../../reusables/menu.dart';
+import '../discover/discover_widget.dart';
 import 'home_page_model.dart';
 export 'home_page_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +23,7 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
+  final TextEditingController nameController = TextEditingController();
   bool isLoading = true;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -38,11 +41,48 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     super.dispose();
   }
+  Future<void> _loadUserProfile() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
 
+      // Get the current authenticated user
+      currentUser = FirebaseAuth.instance.currentUser!;
+
+      if (currentUser == null) {
+        throw Exception('No authenticated user found');
+      }
+
+      // Fetch user data from Firestore using the UID
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser!.uid)
+          .get();
+
+      final data = userDoc.data();
+
+      if (data != null) {
+        setState(() {
+          nameController.text = data['userName'] ?? '';
+        });
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error loading user profile: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
       final user = _auth.currentUser;
         currentUser = user!;
+      _loadUserProfile();
 
 
     return GestureDetector(
@@ -104,7 +144,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             child: Padding(
                               padding: EdgeInsets.all(12.0),
                               child: Text(
-                                'Hello,\nUsername!',
+                                  nameController.text.isNotEmpty ? nameController.text : "Unknown User",
                                 textAlign: TextAlign.start,
                                 style: MyAppTheme.of(context)
                                     .displaySmall
@@ -174,6 +214,21 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   ),
                                   Padding(
                                     padding: EdgeInsets.all(12.0),
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => DiscoverWidget(
+                                              userId: currentUser.uid.toString(),
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     child: Container(
                                       width: 50.0,
                                       height: 50.0,
@@ -184,6 +239,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         shape: BoxShape.rectangle,
                                       ),
                                       child: Align(
+
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),
                                         child: Text(
@@ -198,6 +254,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         ),
                                       ),
                                     ),
+                                  ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.all(12.0),

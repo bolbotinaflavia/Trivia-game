@@ -12,50 +12,41 @@ import 'package:trivia_2/index.dart';
 import '../../model/User.dart';
 import '../../reusables/menu.dart';
 import '../addFriend/add_friend_widget.dart';
-import 'profile_model.dart';
-export 'profile_model.dart';
+import 'friend_profile_model.dart';
+export 'friend_profile_model.dart';
 
-class ProfileWidget extends StatefulWidget {
+class FriendProfileWidget extends StatefulWidget {
   final String userId;
-  const ProfileWidget({super.key, required this.userId});
+  const FriendProfileWidget({super.key, required this.userId});
 
   @override
-  State<ProfileWidget> createState() => _ProfileWidgetState();
+  State<FriendProfileWidget> createState() => _FriendProfileWidgetState();
 }
 
-class _ProfileWidgetState extends State<ProfileWidget> {
+class _FriendProfileWidgetState extends State<FriendProfileWidget> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController nameController = TextEditingController();
   String? profileImageUrl;
-  late ProfileModel _model;
+  late FriendProfileModel _model;
   bool isLoading = true;
-  User? currentUser;
 
   Future<void> _loadUserProfile() async {
     try {
       setState(() {
         isLoading = true;
       });
-
-      // Get the current authenticated user
-      currentUser = FirebaseAuth.instance.currentUser;
-
-      if (currentUser == null) {
-        throw Exception('No authenticated user found');
-      }
-
       // Fetch user data from Firestore using the UID
-      final userDoc = await FirebaseFirestore.instance
+      final currentFriend = (await FirebaseFirestore.instance
           .collection('users')
-          .doc(currentUser!.uid)
-          .get();
+          .where('userId',isEqualTo: widget.userId)
+          .snapshots()) as Users;
 
-      final data = userDoc.data();
 
-      if (data != null) {
+
+      if (currentFriend != null) {
         setState(() {
-          profileImageUrl = data['uploadedImage'] ?? '';
-          nameController.text = data['userName'] ?? '';
+          profileImageUrl = currentFriend.uploadedImage ?? '';
+          nameController.text = currentFriend.userName ?? '';
         });
       }
 
@@ -72,7 +63,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ProfileModel());
+    _model = createModel(context, () => FriendProfileModel());
     _loadUserProfile();
 
   }
@@ -318,112 +309,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                  EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
-                  child: InkWell(
-                    splashColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () async {
-                      context.pushNamed('EditProfile');
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: MyAppTheme
-                            .of(context)
-                            .secondaryBackground,
-                        borderRadius: BorderRadius.circular(12.0),
-                        border: Border.all(
-                          color: MyAppTheme
-                              .of(context)
-                              .alternate,
-                          width: 2.0,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            8.0, 12.0, 8.0, 12.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  8.0, 0.0, 0.0, 0.0),
-                              child: Icon(
-                                Icons.settings_outlined,
-                                color: Color(0xFF1D5D8A),
-                                size: 24.0,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  12.0, 0.0, 0.0, 0.0),
-                              child: Text(
-                                'Account Settings',
-                                style: MyAppTheme
-                                    .of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                  child: FFButtonWidget(
-                    onPressed: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              AddFriendWidget(
-                                userId: widget.userId,
-                              ),
-                        ),
-                      );
-                    },
-                    text: 'Add Friend',
-                    icon: Icon(
-                      Icons.add,
-                      size: 15.0,
-                    ),
-                    options: FFButtonOptions(
-                      width: 300.0,
-                      height: 44.0,
-                      padding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: Color(0xFFBED5DA),
-                      textStyle:
-                      MyAppTheme
-                          .of(context)
-                          .bodyLarge
-                          .override(
-                        fontFamily: 'Inter',
-                        letterSpacing: 0.0,
-                      ),
-                      elevation: 0.0,
-                      borderSide: BorderSide(
-                        color: MyAppTheme
-                            .of(context)
-                            .alternate,
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(38.0),
                     ),
                   ),
                 ),
