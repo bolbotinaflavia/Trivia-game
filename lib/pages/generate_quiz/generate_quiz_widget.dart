@@ -62,7 +62,7 @@ Each question should include:
           'Authorization': 'Bearer ${dotenv.env['OPENAI_API_KEY']}',
         },
         body: json.encode({
-          'model': 'gpt-4',
+          'model': 'gpt-3.5-turbo',
           'messages': [
             {'role': 'system', 'content': 'You are a helpful assistant.'},
             {'role': 'user', 'content': prompt},

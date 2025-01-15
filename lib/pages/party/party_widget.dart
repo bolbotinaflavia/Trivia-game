@@ -14,6 +14,7 @@ import 'package:trivia_2/pages/gameplayparty/gameplay_party_widget.dart';
 import '../../model/Quiz.dart';
 import '../../reusables/menu.dart';
 import '../../reusables/quiz_card.dart';
+import '../scanqrcode/scanQr_code_widget.dart';
 import 'party_model.dart';
 export 'party_model.dart';
 
@@ -36,6 +37,12 @@ class _PartyWidgetState extends State<PartyWidget> {
   List<Quiz> _quizzesList = [];
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Stream<DocumentSnapshot> _partyStream() {
+    return FirebaseFirestore.instance
+        .collection('parties')
+        .doc(widget.partyId)
+        .snapshots();
+  }
 
 
   @override
@@ -75,7 +82,8 @@ class _PartyWidgetState extends State<PartyWidget> {
             .collection('quizzes')
             .where('creatorId', whereIn: partyUsers)
             .get();
-        final quizzes = quizDocs.docs.map((doc) => Quiz.fromSnapshot(doc)).toList();
+        final quizzes = quizDocs.docs.map((doc) => Quiz.fromSnapshot(doc))
+            .toList();
         setState(() {
           _quizzesList = quizzes;
           isLoading = false;
@@ -98,7 +106,9 @@ class _PartyWidgetState extends State<PartyWidget> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: MyAppTheme.of(context).primaryBackground,
+        backgroundColor: MyAppTheme
+            .of(context)
+            .primaryBackground,
         drawer: CustomDrawer(),
         appBar: AppBar(
           backgroundColor: const Color(0xFF1D5D8A),
@@ -110,7 +120,9 @@ class _PartyWidgetState extends State<PartyWidget> {
             fillColor: const Color(0xFF1D5D8A),
             icon: Icon(
               Icons.home_rounded,
-              color: MyAppTheme.of(context).info,
+              color: MyAppTheme
+                  .of(context)
+                  .info,
               size: 24.0,
             ),
             onPressed: () async {
@@ -125,7 +137,9 @@ class _PartyWidgetState extends State<PartyWidget> {
               fillColor: const Color(0xFF1D5D8A),
               icon: Icon(
                 Icons.menu_rounded,
-                color: MyAppTheme.of(context).info,
+                color: MyAppTheme
+                    .of(context)
+                    .info,
                 size: 24.0,
               ),
               onPressed: () async {
@@ -138,99 +152,121 @@ class _PartyWidgetState extends State<PartyWidget> {
         ),
         body: SafeArea(
           top: true,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Chips to show connected participants
-                // Wrap(
-                //   spacing: 8.0,
-                //   runSpacing: 8.0,
-                //   children: partyUsers.map<Widget>((user) {
-                //     return Chip(
-                //       label: Text(user),
-                //       backgroundColor: const Color(0xFFBED5DA),
-                //     );
-                //   }).toList(),
-                // ),
-                const SizedBox(height: 16.0),
-                Align(
-                  alignment: AlignmentDirectional.center,
-                  child: Chip(
-                    backgroundColor: const Color(0xFF1D5D8A),
-                    label: Text(
-                      '$participantsCount / $participantLimit',
-                      style: MyAppTheme.of(context).bodyMedium.override(
-                        fontFamily: 'Inter',
-                        color: Colors.white,
+          child: StreamBuilder<DocumentSnapshot>(
+            stream: _partyStream(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (!snapshot.hasData || snapshot.hasError) {
+                return const Center(
+                    child: Text('Error fetching party details.'));
+              }
+
+              final partyData = snapshot.data!.data() as Map<String, dynamic>;
+              final participantsList = List<String>.from(
+                  partyData['users'] ?? []);
+              final participantsCount = participantsList.length;
+              final participantLimit = partyData['participants'] ?? 0;
+
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional.center,
+                      child: Chip(
+                        backgroundColor: const Color(0xFF1D5D8A),
+                        label: Text(
+                          '$participantsCount / $participantLimit',
+                          style: MyAppTheme
+                              .of(context)
+                              .bodyMedium
+                              .override(
+                            fontFamily: 'Inter',
+                            color: Colors.white,
+                            letterSpacing: 0.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24.0),
+                    Text(
+                      'Available Quizzes',
+                      style: MyAppTheme
+                          .of(context)
+                          .headlineSmall
+                          .override(
+                        fontFamily: 'Readex Pro',
                         letterSpacing: 0.0,
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 24.0),
-                Text(
-                  'Available Quizzes',
-                  style: MyAppTheme.of(context).headlineSmall.override(
-                    fontFamily: 'Readex Pro',
-                    letterSpacing: 0.0,
-                  ),
-                ),
-                Expanded(
-                  child: isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : _quizzesList.isEmpty
-                      ? const Center(child: Text('No quizzes found.'))
-                      : ListView.builder(
-                    padding: const EdgeInsets.all(12.0),
-                    itemCount: _quizzesList.length,
-                    itemBuilder: (context, index) {
-                      final quiz = _quizzesList[index];
-                      return QuizCard(
-                        quiz: quiz,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => GameplayPartyWidget(userId:widget.userId.toString(), quizId: quiz.quizId.toString(), quizTitle: quiz.title.toString(), partyId: widget.partyId,),
-                            ),
+                    Expanded(
+                      child: isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : _quizzesList.isEmpty
+                          ? const Center(child: Text('No quizzes found.'))
+                          : ListView.builder(
+                        padding: const EdgeInsets.all(12.0),
+                        itemCount: _quizzesList.length,
+                        itemBuilder: (context, index) {
+                          final quiz = _quizzesList[index];
+                          return QuizCard(
+                            quiz: quiz,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => GameplayPartyWidget(
+                                    userId: widget.userId.toString(),
+                                    quizId: quiz.quizId.toString(),
+                                    quizTitle: quiz.title.toString(),
+                                    partyId: widget.partyId,),
+                                ),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                FFButtonWidget(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>NewPartyWidget(
-                          partyId: widget.partyId,
-                          userId: widget.userId,
-                        ),
                       ),
-                    );
-                  },
-                  text: 'Back to QR Code',
-                  icon: const Icon(Icons.qr_code, size: 15.0),
-                  options: FFButtonOptions(
-                    height: 40.0,
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    color: const Color(0xFF1D5D8A),
-                    textStyle: MyAppTheme.of(context).titleSmall.override(
-                      fontFamily: 'Inter',
-                      color: Colors.white,
-                      letterSpacing: 0.0,
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
+                    const SizedBox(height: 16.0),
+                    FFButtonWidget(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                NewPartyWidget(
+                                  partyId: widget.partyId,
+                                  userId: widget.userId,
+                                ),
+                          ),
+                        );
+                      },
+                      text: 'Back to QR Code',
+                      icon: const Icon(Icons.qr_code, size: 15.0),
+                      options: FFButtonOptions(
+                        height: 40.0,
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        color: const Color(0xFF1D5D8A),
+                        textStyle: MyAppTheme
+                            .of(context)
+                            .titleSmall
+                            .override(
+                          fontFamily: 'Inter',
+                          color: Colors.white,
+                          letterSpacing: 0.0,
+                        ),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),

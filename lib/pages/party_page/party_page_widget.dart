@@ -13,6 +13,7 @@ import '../../reusables/menu.dart';
 import '../../reusables/party_card.dart';
 import '../create_party/create_party_widget.dart';
 import '../party/party_widget.dart';
+import '../scanqrcode/scanQr_code_widget.dart';
 import 'party_page_model.dart';
 export 'party_page_model.dart';
 
@@ -172,6 +173,27 @@ class _PartyPageWidgetState extends State<PartyPageWidget> {
                           },
                         );
                       },
+                    ),
+                  ),
+                  FFButtonWidget(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => ScanQRCodeWidget( userId:currentUser.uid.toString())),
+                      );
+                    },
+                    text: 'Scan QR Code',
+                    icon: Icon(Icons.qr_code_scanner),
+                    options: FFButtonOptions(
+                      height: 40.0,
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      color: Color(0xFF1D5D8A),
+                      textStyle: MyAppTheme.of(context).titleSmall.override(
+                        fontFamily: 'Inter',
+                        color: Colors.white,
+                        letterSpacing: 0.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
                 ],

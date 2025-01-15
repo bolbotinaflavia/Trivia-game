@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -14,7 +17,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized(); // Ensure all Flutter bindings are initialized before calling Firebase
-  //await dotenv.load();
+  try {
+    final envContent = await rootBundle.loadString('assets/.env');
+    print('File Content: $envContent');
+    await dotenv.load(fileName: 'assets/.env');
+  } catch (e) {
+    print('Error loading .env file: $e');
+  }
   await firebase_core.Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform, // Use platform-specific options from firebase_options.dart
   );

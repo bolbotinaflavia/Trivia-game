@@ -16,6 +16,7 @@ import 'package:trivia_2/pages/add_friends_to_party/add_friends_to_party_widget.
 import 'package:trivia_2/pages/friend_profile/friend_profile_widget.dart';
 import 'package:trivia_2/pages/gameplayparty/gameplay_party_widget.dart';
 import 'package:trivia_2/pages/quizResult/quiz_result_widget.dart';
+import 'package:trivia_2/pages/scanqrcode/scanQr_code_widget.dart';
 
 import '../../pages/addFriend/add_friend_widget.dart';
 import '../../pages/discover/discover_widget.dart';
@@ -199,6 +200,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'Party',
           path: '/party',
           builder: (context, params) => PartyWidget(userId: '', partyId: '',),
+        ),
+        FFRoute(
+          name: 'ScanQrCode',
+          path: '/scanqrcode',
+          builder: (context, params) => ScanQRCodeWidget(userId: ''),
         ),
         FFRoute(
           name: 'About',
