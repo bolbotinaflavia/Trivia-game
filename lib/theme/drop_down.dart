@@ -1,7 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
-
-import 'package:flutter/foundation.dart';
-import 'package:trivia_2/flutter_flow/controller.dart';
+import 'package:trivia_2/theme/controller.dart';
 import 'package:flutter/material.dart';
 
 class DropDown<T> extends StatefulWidget {

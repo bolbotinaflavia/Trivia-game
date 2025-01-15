@@ -1,18 +1,9 @@
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:trivia_2/reusables/menu.dart';
 import '../new_answer/new_answer_widget.dart';
-import 'new_question_model.dart';
 export 'new_question_model.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class NewQuestionWidget extends StatefulWidget {
   final String quizId;
@@ -109,8 +100,7 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
               // Save Question Button
               ElevatedButton(
                 onPressed: () async =>
-                    {await _saveQuestionText(),
-                      Navigator.pop(context)},
+                    {await _saveQuestionText(), Navigator.pop(context)},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1D5D8A),
                 ),

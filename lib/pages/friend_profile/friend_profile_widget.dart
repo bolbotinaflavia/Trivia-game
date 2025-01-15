@@ -1,17 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:trivia_2/index.dart';
 import '../../model/User.dart';
 import '../../reusables/menu.dart';
-import '../addFriend/add_friend_widget.dart';
 import 'friend_profile_model.dart';
 export 'friend_profile_model.dart';
 

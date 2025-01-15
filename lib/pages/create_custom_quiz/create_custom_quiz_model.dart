@@ -1,14 +1,8 @@
-import 'package:trivia_2/flutter_flow/drop_down.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
-import 'package:trivia_2/flutter_flow/controller.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/controller.dart';
 import 'create_custom_quiz_widget.dart' show CreateCustomQuizWidget;
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class CreateCustomQuizModel extends MyAppModel<CreateCustomQuizWidget> {
   ///  State fields for stateful widgets in this page.

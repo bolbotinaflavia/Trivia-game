@@ -1,19 +1,12 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:trivia_2/index.dart';
-import 'package:trivia_2/model/Question.dart';
-import '../../Services/auth_service.dart';
-import '../../model/Quiz.dart';
 import '../../reusables/menu.dart';
 import 'new_quiz_model.dart';
 export 'new_quiz_model.dart';
@@ -33,7 +26,6 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
   late User currentUser;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
   @override
   void initState() {
     super.initState();
@@ -50,7 +42,6 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
       return;
     }
     currentUser = user;
-
   }
 
   @override
@@ -77,7 +68,7 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
         appBar: AppBar(
           backgroundColor: Color(0xFF1D5D8A),
           automaticallyImplyLeading: false,
-          leading:MyAppIconButton(
+          leading: MyAppIconButton(
             borderColor: Colors.transparent,
             borderRadius: 8.0,
             buttonSize: 40.0,
@@ -144,17 +135,15 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
                       obscureText: false,
                       decoration: InputDecoration(
                         isDense: true,
-                        labelStyle:
-                        MyAppTheme.of(context).labelMedium.override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
+                        labelStyle: MyAppTheme.of(context).labelMedium.override(
+                              fontFamily: 'Inter',
+                              letterSpacing: 0.0,
+                            ),
                         hintText: 'Write the name',
-                        hintStyle:
-                        MyAppTheme.of(context).labelMedium.override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
+                        hintStyle: MyAppTheme.of(context).labelMedium.override(
+                              fontFamily: 'Inter',
+                              letterSpacing: 0.0,
+                            ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0x00000000),
@@ -184,8 +173,7 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         filled: true,
-                        fillColor:
-                        MyAppTheme.of(context).secondaryBackground,
+                        fillColor: MyAppTheme.of(context).secondaryBackground,
                       ),
                       style: MyAppTheme.of(context).bodyMedium.override(
                             fontFamily: 'Inter',
@@ -210,7 +198,7 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
                           activeTrackColor: Color(0xFF1D5D8A),
                           inactiveTrackColor: Color(0xFFBED5DA),
                           inactiveThumbColor:
-                          MyAppTheme.of(context).primaryBackground,
+                              MyAppTheme.of(context).primaryBackground,
                         ),
                       ),
                       Text(
@@ -236,7 +224,7 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
                           activeTrackColor: Color(0xFF1D5D8A),
                           inactiveTrackColor: Color(0xFFBED5DA),
                           inactiveThumbColor:
-                          MyAppTheme.of(context).primaryBackground,
+                              MyAppTheme.of(context).primaryBackground,
                         ),
                       ),
                       Text(
@@ -259,8 +247,14 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
                         await FirebaseFirestore.instance
                             .collection('quizzes')
                             .doc(quizId)
-                            .set({'title': title, 'quizId': quizId,'creatorId':currentUser.uid.toString(),'questions':["",""]});
-                        if (_model.switchValue1 == false && _model.switchValue2 == true) {
+                            .set({
+                          'title': title,
+                          'quizId': quizId,
+                          'creatorId': currentUser.uid.toString(),
+                          'questions': ["", ""]
+                        });
+                        if (_model.switchValue1 == false &&
+                            _model.switchValue2 == true) {
                           // Navigate to Generate Quiz Page
                           Navigator.push(
                             context,
@@ -272,7 +266,8 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
                               ),
                             ),
                           );
-                        } else if (_model.switchValue1 == true && _model.switchValue2 == false) {
+                        } else if (_model.switchValue1 == true &&
+                            _model.switchValue2 == false) {
                           // Navigate to Custom Quiz Page
                           Navigator.push(
                             context,
@@ -280,7 +275,7 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
                               builder: (_) => GenerateQuizWidget(
                                 quizTitle: title,
                                 quizId: quizId,
-                                userId:currentUser.uid.toString(),
+                                userId: currentUser.uid.toString(),
                               ),
                             ),
                           );
@@ -313,12 +308,11 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
                       iconPadding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       color: Color(0xFF1D5D8A),
-                      textStyle:
-                      MyAppTheme.of(context).titleSmall.override(
-                                fontFamily: 'Inter',
-                                color: Colors.white,
-                                letterSpacing: 0.0,
-                              ),
+                      textStyle: MyAppTheme.of(context).titleSmall.override(
+                            fontFamily: 'Inter',
+                            color: Colors.white,
+                            letterSpacing: 0.0,
+                          ),
                       elevation: 0.0,
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -331,5 +325,4 @@ class _NewQuizWidgetState extends State<NewQuizWidget> {
       ),
     );
   }
-
 }

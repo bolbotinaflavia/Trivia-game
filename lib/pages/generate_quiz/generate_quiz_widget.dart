@@ -2,16 +2,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../flutter_flow/widgets.dart';
-import '../../flutter_flow/theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 
 class GenerateQuizWidget extends StatefulWidget {
   final String quizTitle;
   final String quizId;
 
-  const GenerateQuizWidget({Key? key, required this.quizTitle, required this.quizId, required String userId})
+  const GenerateQuizWidget(
+      {Key? key,
+      required this.quizTitle,
+      required this.quizId,
+      required String userId})
       : super(key: key);
 
   @override
@@ -19,13 +20,15 @@ class GenerateQuizWidget extends StatefulWidget {
 }
 
 class _GenerateQuizWidgetState extends State<GenerateQuizWidget> {
-  final TextEditingController numberOfQuestionsController = TextEditingController();
+  final TextEditingController numberOfQuestionsController =
+      TextEditingController();
   final TextEditingController themeController = TextEditingController();
   bool includeHints = true;
   bool isLoading = false;
 
   Future<void> generateAndSaveQuiz() async {
-    final numberOfQuestions = int.tryParse(numberOfQuestionsController.text.trim()) ?? 0;
+    final numberOfQuestions =
+        int.tryParse(numberOfQuestionsController.text.trim()) ?? 0;
     final theme = themeController.text.trim();
 
     if (numberOfQuestions == 0 || theme.isEmpty) {
@@ -82,7 +85,8 @@ Each question should include:
         await _saveQuizToFirestore(questions);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Quiz generated and saved successfully!')),
+          const SnackBar(
+              content: Text('Quiz generated and saved successfully!')),
         );
       } else {
         print('Error: ${response.body}');
@@ -122,7 +126,10 @@ Each question should include:
           questions.add(currentQuestion);
         }
         currentQuestion = {'question': line.split(':').last.trim()};
-      } else if (line.startsWith('A:') || line.startsWith('B:') || line.startsWith('C:') || line.startsWith('D:')) {
+      } else if (line.startsWith('A:') ||
+          line.startsWith('B:') ||
+          line.startsWith('C:') ||
+          line.startsWith('D:')) {
         final choice = line.split(':').first.trim();
         currentQuestion?[choice] = line.split(':').last.trim();
       } else if (line.startsWith('Correct Answer:')) {
@@ -137,8 +144,10 @@ Each question should include:
     return questions;
   }
 
-  Future<void> _saveQuizToFirestore(List<Map<String, dynamic>> questions) async {
-    final quizRef = FirebaseFirestore.instance.collection('quizzes').doc(widget.quizId);
+  Future<void> _saveQuizToFirestore(
+      List<Map<String, dynamic>> questions) async {
+    final quizRef =
+        FirebaseFirestore.instance.collection('quizzes').doc(widget.quizId);
 
     // Add questions as a subcollection
     for (var i = 0; i < questions.length; i++) {
@@ -204,9 +213,9 @@ Each question should include:
             isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ElevatedButton(
-              onPressed: generateAndSaveQuiz,
-              child: const Text('Generate and Save Quiz'),
-            ),
+                    onPressed: generateAndSaveQuiz,
+                    child: const Text('Generate and Save Quiz'),
+                  ),
           ],
         ),
       ),

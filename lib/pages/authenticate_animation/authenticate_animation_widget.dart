@@ -1,13 +1,8 @@
-import 'package:flutter/scheduler.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 import 'authenticate_animation_model.dart';
 export 'authenticate_animation_model.dart';
 

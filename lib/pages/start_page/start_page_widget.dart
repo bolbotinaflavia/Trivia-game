@@ -1,12 +1,8 @@
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 import 'start_page_model.dart';
 export 'start_page_model.dart';
 
@@ -80,13 +76,13 @@ class _StartPageWidgetState extends State<StartPageWidget> {
                     child: Text(
                       'Welcome to Trivia Planet',
                       style: MyAppTheme.of(context).headlineMedium.override(
-                        fontFamily: 'Roboto Mono',
-                        color: Color(0xFF1D5D8A),
-                        fontSize: 26.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.w800,
-                        fontStyle: FontStyle.italic,
-                      ),
+                            fontFamily: 'Roboto Mono',
+                            color: Color(0xFF1D5D8A),
+                            fontSize: 26.0,
+                            letterSpacing: 0.0,
+                            fontWeight: FontWeight.w800,
+                            fontStyle: FontStyle.italic,
+                          ),
                     ),
                   ),
                 ),

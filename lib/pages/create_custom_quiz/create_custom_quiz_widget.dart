@@ -1,26 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trivia_2/flutter_flow/drop_down.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
-import 'package:trivia_2/flutter_flow/controller.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:trivia_2/pages/new_question/new_question_widget.dart';
 import 'package:trivia_2/reusables/menu.dart';
 import 'create_custom_quiz_model.dart';
 export 'create_custom_quiz_model.dart';
-import 'package:trivia_2/model/Question.dart';
 
 class CreateCustomQuizWidget extends StatefulWidget {
   final String userId;
   final String quizTitle;
   final String quizId;
-  const CreateCustomQuizWidget({Key? key, required this.quizTitle,required this.quizId, required this.userId}) : super(key: key);
-
+  const CreateCustomQuizWidget(
+      {Key? key,
+      required this.quizTitle,
+      required this.quizId,
+      required this.userId})
+      : super(key: key);
 
   @override
   State<CreateCustomQuizWidget> createState() => _CreateCustomQuizWidgetState();
@@ -50,9 +49,7 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: MyAppTheme
-            .of(context)
-            .primaryBackground,
+        backgroundColor: MyAppTheme.of(context).primaryBackground,
         drawer: CustomDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xFF1D5D8A),
@@ -64,9 +61,7 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
             fillColor: Color(0xFF1D5D8A),
             icon: Icon(
               Icons.home_rounded,
-              color: MyAppTheme
-                  .of(context)
-                  .info,
+              color: MyAppTheme.of(context).info,
               size: 24.0,
             ),
             onPressed: () async {
@@ -81,9 +76,7 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
               fillColor: Color(0xFF1D5D8A),
               icon: Icon(
                 Icons.menu_rounded,
-                color: MyAppTheme
-                    .of(context)
-                    .info,
+                color: MyAppTheme.of(context).info,
                 size: 24.0,
               ),
               onPressed: () async {
@@ -108,9 +101,10 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                            NewQuestionWidget(
-                              quizId: widget.quizId, questionId: questionId,),
+                        builder: (_) => NewQuestionWidget(
+                          quizId: widget.quizId,
+                          questionId: questionId,
+                        ),
                       ),
                     );
                   },
@@ -120,13 +114,10 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
                     width: double.infinity,
                     height: 50.0,
                     color: const Color(0xFF1D5D8A),
-                    textStyle: MyAppTheme
-                        .of(context)
-                        .titleSmall
-                        .override(
-                      fontFamily: 'Inter',
-                      color: Colors.white,
-                    ),
+                    textStyle: MyAppTheme.of(context).titleSmall.override(
+                          fontFamily: 'Inter',
+                          color: Colors.white,
+                        ),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
@@ -149,8 +140,10 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
                       itemCount: questions.length,
                       itemBuilder: (context, index) {
                         final question = questions[index];
-                        final questionData = question.data() as Map<String, dynamic>?;
-                        final questionText = questionData?['text'] ?? 'No text available';
+                        final questionData =
+                            question.data() as Map<String, dynamic>?;
+                        final questionText =
+                            questionData?['text'] ?? 'No text available';
 
                         return ListTile(
                           title: Text(questionText),
@@ -171,9 +164,12 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
                               }
 
                               return DropdownButton<String>(
-                                items: answers.map<DropdownMenuItem<String>>((answerDoc) {
-                                  final answerData = answerDoc.data() as Map<String, dynamic>;
-                                  final answerText = answerData['text'] ?? 'No text';
+                                items: answers
+                                    .map<DropdownMenuItem<String>>((answerDoc) {
+                                  final answerData =
+                                      answerDoc.data() as Map<String, dynamic>;
+                                  final answerText =
+                                      answerData['text'] ?? 'No text';
                                   return DropdownMenuItem<String>(
                                     value: answerText,
                                     child: Text(answerText),
@@ -204,18 +200,14 @@ class _CreateCustomQuizWidgetState extends State<CreateCustomQuizWidget> {
                 options: FFButtonOptions(
                   height: 40.0,
                   padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                      0.0, 0.0, 0.0, 0.0),
+                  iconPadding:
+                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                   color: Color(0xFF1D5D8A),
-                  textStyle:
-                  MyAppTheme
-                      .of(context)
-                      .titleSmall
-                      .override(
-                    fontFamily: 'Inter',
-                    color: Colors.white,
-                    letterSpacing: 0.0,
-                  ),
+                  textStyle: MyAppTheme.of(context).titleSmall.override(
+                        fontFamily: 'Inter',
+                        color: Colors.white,
+                        letterSpacing: 0.0,
+                      ),
                   elevation: 0.0,
                   borderRadius: BorderRadius.circular(8.0),
                 ),

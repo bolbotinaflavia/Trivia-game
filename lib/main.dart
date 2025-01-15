@@ -3,29 +3,26 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
-import 'flutter_flow/theme.dart';
-import 'flutter_flow/util.dart';
-import 'flutter_flow/nav/nav.dart';
+import 'theme/theme.dart';
+import 'theme/util.dart';
+import 'theme/nav/nav.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'firebase_options.dart';
-import 'index.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
-
-  WidgetsFlutterBinding.ensureInitialized(); // Ensure all Flutter bindings are initialized before calling Firebase
-  try {
-    final envContent = await rootBundle.loadString('assets/.env');
-    print('File Content: $envContent');
-    await dotenv.load(fileName: 'assets/.env');
-  } catch (e) {
-    print('Error loading .env file: $e');
-  }
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Ensure all Flutter bindings are initialized before calling Firebase
+  // try {
+  //   final envContent = await rootBundle.loadString('assets/.env');
+  //   print('File Content: $envContent');
+  //   await dotenv.load(fileName: 'assets/.env');
+  // } catch (e) {
+  //   print('Error loading .env file: $e');
+  //}
   await firebase_core.Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform, // Use platform-specific options from firebase_options.dart
+    options: DefaultFirebaseOptions
+        .currentPlatform, // Use platform-specific options from firebase_options.dart
   );
   runApp(MyApp());
 }

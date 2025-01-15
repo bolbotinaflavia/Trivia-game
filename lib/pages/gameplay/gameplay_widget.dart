@@ -1,14 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trivia_2/flutter_flow/choice_chips.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
-import 'package:trivia_2/flutter_flow/controller.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import '../quizResult/quiz_result_widget.dart';
 import 'gameplay_model.dart';
 export 'gameplay_model.dart';
@@ -65,8 +61,6 @@ class _GameplayWidgetState extends State<GameplayWidget>
       questions = querySnapshot.docs;
       isLoading = false;
     });
-
-    
 
     _controller.forward(); // Start animation for the first question.
   }
@@ -127,7 +121,6 @@ class _GameplayWidgetState extends State<GameplayWidget>
     final question = questions[currentQuestionIndex];
     final questionData = question.data() as Map<String, dynamic>;
     final questionText = questionData['text'] ?? 'No question text available';
-
 
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -301,51 +294,50 @@ class _GameplayWidgetState extends State<GameplayWidget>
                           ),
                           const SizedBox(height: 20),
                           StreamBuilder<QuerySnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('answers')
-                                  .where('questionId', isEqualTo: question.id)
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const CircularProgressIndicator();
-                                }
+                            stream: FirebaseFirestore.instance
+                                .collection('answers')
+                                .where('questionId', isEqualTo: question.id)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              }
 
-                                if (!snapshot.hasData ||
-                                    snapshot.data!.docs.isEmpty) {
-                                  return const Text('No answers available.');
-                                }
+                              if (!snapshot.hasData ||
+                                  snapshot.data!.docs.isEmpty) {
+                                return const Text('No answers available.');
+                              }
 
-                                final answers = snapshot.data!.docs;
+                              final answers = snapshot.data!.docs;
 
-                                return Column(
-                                  children: answers.map((answerDoc) {
-                                    final answerData = answerDoc.data() as Map<
-                                        String,
-                                        dynamic>;
-                                    final answerText = answerData['text'] ??
-                                        'No answer text';
-                                    final isCorrect = answerData['isCorrect'] ??
-                                        false;
+                              return Column(
+                                children: answers.map((answerDoc) {
+                                  final answerData =
+                                      answerDoc.data() as Map<String, dynamic>;
+                                  final answerText =
+                                      answerData['text'] ?? 'No answer text';
+                                  final isCorrect =
+                                      answerData['isCorrect'] ?? false;
 
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          _nextQuestion(answerText,
-                                              isCorrect ? answerText : '');
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(
-                                              0xFF1D5D8A),
-                                        ),
-                                        child: Text(answerText),
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        _nextQuestion(answerText,
+                                            isCorrect ? answerText : '');
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            const Color(0xFF1D5D8A),
                                       ),
-                                    );
-                                  }).toList(),
-                                );
-                              },
+                                      child: Text(answerText),
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            },
                           ),
                         ],
                       ),

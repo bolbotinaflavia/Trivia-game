@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:trivia_2/index.dart';
-import '../../model/User.dart';
 import '../../reusables/menu.dart';
 import '../addFriend/add_friend_widget.dart';
 import 'profile_model.dart';
@@ -69,12 +66,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       });
     }
   }
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => ProfileModel());
     _loadUserProfile();
-
   }
 
   @override
@@ -86,14 +83,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: MyAppTheme
-            .of(context)
-            .secondaryBackground,
+        backgroundColor: MyAppTheme.of(context).secondaryBackground,
         drawer: CustomDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xFF1D5D8A),
@@ -105,9 +99,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             fillColor: Color(0xFF1D5D8A),
             icon: Icon(
               Icons.home_rounded,
-              color: MyAppTheme
-                  .of(context)
-                  .info,
+              color: MyAppTheme.of(context).info,
               size: 24.0,
             ),
             onPressed: () async {
@@ -122,9 +114,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               fillColor: Color(0xFF1D5D8A),
               icon: Icon(
                 Icons.menu_rounded,
-                color: MyAppTheme
-                    .of(context)
-                    .info,
+                color: MyAppTheme.of(context).info,
                 size: 24.0,
               ),
               onPressed: () async {
@@ -153,7 +143,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(60.0),
                       child: Image.asset(
-                        profileImageUrl?.isNotEmpty == true ? profileImageUrl! : 'assets/images/pin6.jpg',
+                        profileImageUrl?.isNotEmpty == true
+                            ? profileImageUrl!
+                            : 'assets/images/pin6.jpg',
                         //'$currentUser.uploadedImage',
                         width: 100.0,
                         height: 100.0,
@@ -165,15 +157,14 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 0.0),
                   child: Text(
-                    nameController.text.isNotEmpty ? nameController.text : "Unknown User",
+                    nameController.text.isNotEmpty
+                        ? nameController.text
+                        : "Unknown User",
                     //'$currentUser.userName',
-                    style: MyAppTheme
-                        .of(context)
-                        .headlineSmall
-                        .override(
-                      fontFamily: 'Readex Pro',
-                      letterSpacing: 0.0,
-                    ),
+                    style: MyAppTheme.of(context).headlineSmall.override(
+                          fontFamily: 'Readex Pro',
+                          letterSpacing: 0.0,
+                        ),
                   ),
                 ),
                 Divider(
@@ -181,13 +172,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   thickness: 1.0,
                   indent: 24.0,
                   endIndent: 24.0,
-                  color: MyAppTheme
-                      .of(context)
-                      .alternate,
+                  color: MyAppTheme.of(context).alternate,
                 ),
                 Padding(
                   padding:
-                  EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                      EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                   child: InkWell(
                     splashColor: Colors.transparent,
                     focusColor: Colors.transparent,
@@ -197,24 +186,19 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              UserQuizzesWidget(
-                                userId: widget.userId,
-                              ),
+                          builder: (_) => UserQuizzesWidget(
+                            userId: widget.userId,
+                          ),
                         ),
                       );
                     },
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: MyAppTheme
-                            .of(context)
-                            .secondaryBackground,
+                        color: MyAppTheme.of(context).secondaryBackground,
                         borderRadius: BorderRadius.circular(12.0),
                         border: Border.all(
-                          color: MyAppTheme
-                              .of(context)
-                              .alternate,
+                          color: MyAppTheme.of(context).alternate,
                           width: 2.0,
                         ),
                       ),
@@ -238,13 +222,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                   12.0, 0.0, 0.0, 0.0),
                               child: Text(
                                 'Quizzes',
-                                style: MyAppTheme
-                                    .of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
+                                style:
+                                    MyAppTheme.of(context).bodyMedium.override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
                               ),
                             ),
                           ],
@@ -255,7 +237,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 ),
                 Padding(
                   padding:
-                  EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                      EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                   child: InkWell(
                     splashColor: Colors.transparent,
                     focusColor: Colors.transparent,
@@ -265,24 +247,19 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              UserFriendsWidget(
-                                userId: widget.userId,
-                              ),
+                          builder: (_) => UserFriendsWidget(
+                            userId: widget.userId,
+                          ),
                         ),
                       );
                     },
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: MyAppTheme
-                            .of(context)
-                            .secondaryBackground,
+                        color: MyAppTheme.of(context).secondaryBackground,
                         borderRadius: BorderRadius.circular(12.0),
                         border: Border.all(
-                          color: MyAppTheme
-                              .of(context)
-                              .alternate,
+                          color: MyAppTheme.of(context).alternate,
                           width: 2.0,
                         ),
                       ),
@@ -306,13 +283,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                   12.0, 0.0, 0.0, 0.0),
                               child: Text(
                                 'Friends',
-                                style: MyAppTheme
-                                    .of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
+                                style:
+                                    MyAppTheme.of(context).bodyMedium.override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
                               ),
                             ),
                           ],
@@ -323,7 +298,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 ),
                 Padding(
                   padding:
-                  EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                      EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                   child: InkWell(
                     splashColor: Colors.transparent,
                     focusColor: Colors.transparent,
@@ -335,14 +310,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: MyAppTheme
-                            .of(context)
-                            .secondaryBackground,
+                        color: MyAppTheme.of(context).secondaryBackground,
                         borderRadius: BorderRadius.circular(12.0),
                         border: Border.all(
-                          color: MyAppTheme
-                              .of(context)
-                              .alternate,
+                          color: MyAppTheme.of(context).alternate,
                           width: 2.0,
                         ),
                       ),
@@ -366,13 +337,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                   12.0, 0.0, 0.0, 0.0),
                               child: Text(
                                 'Account Settings',
-                                style: MyAppTheme
-                                    .of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
+                                style:
+                                    MyAppTheme.of(context).bodyMedium.override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
                               ),
                             ),
                           ],
@@ -388,10 +357,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              AddFriendWidget(
-                                userId: widget.userId,
-                              ),
+                          builder: (_) => AddFriendWidget(
+                            userId: widget.userId,
+                          ),
                         ),
                       );
                     },
@@ -404,23 +372,17 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       width: 300.0,
                       height: 44.0,
                       padding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       color: Color(0xFFBED5DA),
-                      textStyle:
-                      MyAppTheme
-                          .of(context)
-                          .bodyLarge
-                          .override(
-                        fontFamily: 'Inter',
-                        letterSpacing: 0.0,
-                      ),
+                      textStyle: MyAppTheme.of(context).bodyLarge.override(
+                            fontFamily: 'Inter',
+                            letterSpacing: 0.0,
+                          ),
                       elevation: 0.0,
                       borderSide: BorderSide(
-                        color: MyAppTheme
-                            .of(context)
-                            .alternate,
+                        color: MyAppTheme.of(context).alternate,
                         width: 1.0,
                       ),
                       borderRadius: BorderRadius.circular(38.0),

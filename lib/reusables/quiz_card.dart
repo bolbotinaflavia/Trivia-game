@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../flutter_flow/theme.dart';
+import '../theme/theme.dart';
 import '../model/Quiz.dart';
 
 class QuizCard extends StatelessWidget {
@@ -26,16 +26,16 @@ class QuizCard extends StatelessWidget {
           title: Text(
             quiz.title ?? 'Untitled Quiz',
             style: MyAppTheme.of(context).titleSmall.override(
-              fontFamily: 'Inter',
-              color: Colors.black,
-            ),
+                  fontFamily: 'Inter',
+                  color: Colors.black,
+                ),
           ),
           subtitle: Text(
             "Quiz ID: ${quiz.quizId}",
             style: MyAppTheme.of(context).bodySmall.override(
-              fontFamily: 'Inter',
-              color: Colors.black54,
-            ),
+                  fontFamily: 'Inter',
+                  color: Colors.black54,
+                ),
           ),
           trailing: const Icon(Icons.arrow_forward_ios),
         ),

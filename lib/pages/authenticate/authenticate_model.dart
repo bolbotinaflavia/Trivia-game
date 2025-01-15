@@ -1,18 +1,7 @@
-import 'package:trivia_2/flutter_flow/model.dart';
-
-import 'package:trivia_2/flutter_flow/animations.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
-import 'dart:math';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/util.dart';
 import 'authenticate_widget.dart' show AuthenticateWidget;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 class AuthenticateModel extends MyAppModel<AuthenticateWidget> {
   ///  State fields for stateful widgets in this page.

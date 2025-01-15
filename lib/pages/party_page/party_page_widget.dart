@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import '../../model/Party.dart';
 import '../../reusables/menu.dart';
 import '../../reusables/party_card.dart';
@@ -122,84 +120,89 @@ class _PartyPageWidgetState extends State<PartyPageWidget> {
           elevation: 2.0,
         ),
         body: SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: FFButtonWidget(
-                      onPressed: () async=> {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => CreatePartyWidget(userId: currentUser.uid,)
-                          ),
-                        ),
-                      },
-                      text: 'New Party',
-                      icon: const Icon(Icons.add_box, size: 15.0),
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 50.0,
-                        color: const Color(0xFF1D5D8A),
-                        textStyle: MyAppTheme.of(context).titleSmall.override(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: FFButtonWidget(
+                  onPressed: () async => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => CreatePartyWidget(
+                                userId: currentUser.uid,
+                              )),
+                    ),
+                  },
+                  text: 'New Party',
+                  icon: const Icon(Icons.add_box, size: 15.0),
+                  options: FFButtonOptions(
+                    width: double.infinity,
+                    height: 50.0,
+                    color: const Color(0xFF1D5D8A),
+                    textStyle: MyAppTheme.of(context).titleSmall.override(
                           fontFamily: 'Inter',
                           color: Colors.white,
                         ),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  Expanded(
-                    child: isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : _partiesList.isEmpty
+                ),
+              ),
+              Expanded(
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _partiesList.isEmpty
                         ? const Center(child: Text('No parties found.'))
                         : ListView.builder(
-                      padding: const EdgeInsets.all(12.0),
-                      itemCount: _partiesList.length,
-                      itemBuilder: (context, index) {
-                        final party = _partiesList[index];
-                        return PartyCard(
-                          party: party,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => PartyWidget(userId:currentUser.uid.toString(), partyId: party.partyId.toString()),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  FFButtonWidget(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => ScanQRCodeWidget( userId:currentUser.uid.toString())),
-                      );
-                    },
-                    text: 'Scan QR Code',
-                    icon: Icon(Icons.qr_code_scanner),
-                    options: FFButtonOptions(
-                      height: 40.0,
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      color: Color(0xFF1D5D8A),
-                      textStyle: MyAppTheme.of(context).titleSmall.override(
+                            padding: const EdgeInsets.all(12.0),
+                            itemCount: _partiesList.length,
+                            itemBuilder: (context, index) {
+                              final party = _partiesList[index];
+                              return PartyCard(
+                                party: party,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => PartyWidget(
+                                          userId: currentUser.uid.toString(),
+                                          partyId: party.partyId.toString()),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+              ),
+              FFButtonWidget(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ScanQRCodeWidget(
+                            userId: currentUser.uid.toString())),
+                  );
+                },
+                text: 'Scan QR Code',
+                icon: Icon(Icons.qr_code_scanner),
+                options: FFButtonOptions(
+                  height: 40.0,
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  color: Color(0xFF1D5D8A),
+                  textStyle: MyAppTheme.of(context).titleSmall.override(
                         fontFamily: 'Inter',
                         color: Colors.white,
                         letterSpacing: 0.0,
                       ),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                ],
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
               ),
-            ),
+            ],
           ),
-        );
+        ),
+      ),
+    );
   }
 }

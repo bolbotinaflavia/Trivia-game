@@ -1,14 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:trivia_2/pages/home_page/home_page_model.dart';
-import 'package:trivia_2/pages/home_page/home_page_widget.dart';
-import 'package:trivia_2/pages/start_page/start_page_model.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-
 import 'package:trivia_2/pages/authenticate/authenticate_widget.dart';
+import '../pages/home_page/home_page_widget.dart';
 
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;

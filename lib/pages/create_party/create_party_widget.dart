@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:trivia_2/index.dart';
 import '../../reusables/menu.dart';
 import 'create_party_model.dart';
@@ -122,17 +120,15 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                       obscureText: false,
                       decoration: InputDecoration(
                         isDense: true,
-                        labelStyle:
-                        MyAppTheme.of(context).labelMedium.override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
+                        labelStyle: MyAppTheme.of(context).labelMedium.override(
+                              fontFamily: 'Inter',
+                              letterSpacing: 0.0,
+                            ),
                         hintText: 'Write a name',
-                        hintStyle:
-                        MyAppTheme.of(context).labelMedium.override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
+                        hintStyle: MyAppTheme.of(context).labelMedium.override(
+                              fontFamily: 'Inter',
+                              letterSpacing: 0.0,
+                            ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0x00000000),
@@ -162,8 +158,7 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         filled: true,
-                        fillColor:
-                        MyAppTheme.of(context).secondaryBackground,
+                        fillColor: MyAppTheme.of(context).secondaryBackground,
                       ),
                       style: MyAppTheme.of(context).bodyMedium.override(
                             fontFamily: 'Inter',
@@ -190,12 +185,11 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                       iconPadding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       color: Color(0xFFBED5DA),
-                      textStyle:
-                      MyAppTheme.of(context).titleSmall.override(
-                                fontFamily: 'Inter',
-                                color: Color(0xFF1D5D8A),
-                                letterSpacing: 0.0,
-                              ),
+                      textStyle: MyAppTheme.of(context).titleSmall.override(
+                            fontFamily: 'Inter',
+                            color: Color(0xFF1D5D8A),
+                            letterSpacing: 0.0,
+                          ),
                       elevation: 0.0,
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -223,9 +217,9 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                       Text(
                         _model.sliderValue!.toInt().toString(),
                         style: MyAppTheme.of(context).headlineMedium.override(
-                          fontFamily: 'Readex Pro',
-                          color: MyAppTheme.of(context).primaryText,
-                        ),
+                              fontFamily: 'Readex Pro',
+                              color: MyAppTheme.of(context).primaryText,
+                            ),
                       ),
                       IconButton(
                         onPressed: () {
@@ -252,7 +246,7 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                           activeTrackColor: Color(0xFF1D5D8A),
                           inactiveTrackColor: Color(0xFFBED5DA),
                           inactiveThumbColor:
-                          MyAppTheme.of(context).primaryBackground,
+                              MyAppTheme.of(context).primaryBackground,
                         ),
                       ),
                       Text(
@@ -268,7 +262,8 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                     onPressed: () async {
                       if (_model.textController!.text.trim().isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please name your party.')),
+                          const SnackBar(
+                              content: Text('Please name your party.')),
                         );
                         return;
                       }
@@ -277,14 +272,17 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                             .collection('parties')
                             .doc()
                             .id;
-                        final partyDoc = await FirebaseFirestore.instance.collection('parties')
-                          .doc(partyId)
-                          .set({
-                          'partyId':partyId,
+                        final partyDoc = await FirebaseFirestore.instance
+                            .collection('parties')
+                            .doc(partyId)
+                            .set({
+                          'partyId': partyId,
                           'name': _model.textController!.text.trim(),
                           'creatorId': widget.userId,
                           'participants': _model.sliderValue!.toInt(),
-                          'users':[widget.userId,],
+                          'users': [
+                            widget.userId,
+                          ],
                           'remember': _model.switchValue,
                           'photoUrl': '',
                         });
@@ -293,17 +291,19 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => NewPartyWidget(
-                              partyId: partyId, userId: widget.userId,
+                              partyId: partyId,
+                              userId: widget.userId,
+                            ),
                           ),
-                        ),
                         );
                       } catch (e) {
                         print('Error creating party: $e');
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Failed to create party. Try again.')),
+                          const SnackBar(
+                              content:
+                                  Text('Failed to create party. Try again.')),
                         );
                       }
-
                     },
                     text: 'Next step',
                     icon: Icon(
@@ -317,12 +317,11 @@ class _CreatePartyWidgetState extends State<CreatePartyWidget> {
                       iconPadding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       color: Color(0xFF1D5D8A),
-                      textStyle:
-                      MyAppTheme.of(context).titleSmall.override(
-                                fontFamily: 'Inter',
-                                color: Colors.white,
-                                letterSpacing: 0.0,
-                              ),
+                      textStyle: MyAppTheme.of(context).titleSmall.override(
+                            fontFamily: 'Inter',
+                            color: Colors.white,
+                            letterSpacing: 0.0,
+                          ),
                       elevation: 0.0,
                       borderRadius: BorderRadius.circular(8.0),
                     ),

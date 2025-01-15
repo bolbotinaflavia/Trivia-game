@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import '../../model/Quiz.dart';
 import '../../reusables/menu.dart';
 import '../../reusables/quiz_card.dart';
@@ -32,26 +29,25 @@ class _UserQuizzesWidgetState extends State<UserQuizzesWidget> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> fetchQuizzes() async {
+    final data = await FirebaseFirestore.instance
+        .collection("quizzes")
+        .where('creatorId', isEqualTo: widget.userId)
+        .orderBy('title', descending: true)
+        .get();
 
-      final data = await FirebaseFirestore.instance
-          .collection("quizzes")
-          .where('creatorId', isEqualTo: widget.userId)
-          .orderBy('title', descending: true)
-          .get();
-
-      final quizzes = data.docs.map((doc) => Quiz.fromSnapshot(doc)).toList();
-      setState(() {
-        _quizzesList = quizzes;
-        isLoading = false;
-      });
-    }
+    final quizzes = data.docs.map((doc) => Quiz.fromSnapshot(doc)).toList();
+    setState(() {
+      _quizzesList = quizzes;
+      isLoading = false;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => UserQuizzesModel());
     fetchQuizzes();
-    currentUser=_auth.currentUser!;
+    currentUser = _auth.currentUser!;
   }
 
   @override
@@ -63,7 +59,6 @@ class _UserQuizzesWidgetState extends State<UserQuizzesWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -137,9 +132,9 @@ class _UserQuizzesWidgetState extends State<UserQuizzesWidget> {
                   child: Text(
                     'Username',
                     style: MyAppTheme.of(context).headlineSmall.override(
-                      fontFamily: 'Readex Pro',
-                      letterSpacing: 0.0,
-                    ),
+                          fontFamily: 'Readex Pro',
+                          letterSpacing: 0.0,
+                        ),
                   ),
                 ),
                 Divider(
@@ -153,31 +148,31 @@ class _UserQuizzesWidgetState extends State<UserQuizzesWidget> {
                 isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _quizzesList.isEmpty
-                    ? const Center(child: Text('No quizzes found.'))
-                    : Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(12.0),
-                    itemCount: _quizzesList.length,
-                    itemBuilder: (context, index) {
-                      final quiz = _quizzesList[index];
-                      return QuizCard(
-                        quiz: quiz,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => StartgameWidget(
-                                userId: currentUser.uid.toString(),
-                                quizId: quiz.quizId.toString(),
-                                quizTitle: quiz.title.toString(),
-                              ),
+                        ? const Center(child: Text('No quizzes found.'))
+                        : Expanded(
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(12.0),
+                              itemCount: _quizzesList.length,
+                              itemBuilder: (context, index) {
+                                final quiz = _quizzesList[index];
+                                return QuizCard(
+                                  quiz: quiz,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => StartgameWidget(
+                                          userId: currentUser.uid.toString(),
+                                          quizId: quiz.quizId.toString(),
+                                          quizTitle: quiz.title.toString(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
                             ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
+                          ),
               ],
             ),
           ),

@@ -3,11 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trivia_2/index.dart';
-import '../../Services/auth_service.dart';
-import '../../flutter_flow/icon_button.dart';
-import '../../flutter_flow/model.dart';
-import '../../flutter_flow/theme.dart';
-import '../../flutter_flow/widgets.dart';
+import '../../theme/icon_button.dart';
+import '../../theme/model.dart';
+import '../../theme/theme.dart';
+import '../../theme/widgets.dart';
 import '../../model/Quiz.dart';
 import '../../reusables/menu.dart';
 import '../../reusables/quiz_card.dart';
@@ -119,14 +118,14 @@ class _QuizzesWidgetState extends State<QuizzesWidget> {
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: FFButtonWidget(
-                  onPressed: () async=> {
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                  builder: (_) => NewQuizWidget(userId:currentUser.uid.toString())
-                  ),
-                  ),
-                },
+                  onPressed: () async => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => NewQuizWidget(
+                              userId: currentUser.uid.toString())),
+                    ),
+                  },
                   text: 'New Quiz',
                   icon: const Icon(Icons.add_box, size: 15.0),
                   options: FFButtonOptions(
@@ -134,9 +133,9 @@ class _QuizzesWidgetState extends State<QuizzesWidget> {
                     height: 50.0,
                     color: const Color(0xFF1D5D8A),
                     textStyle: MyAppTheme.of(context).titleSmall.override(
-                      fontFamily: 'Inter',
-                      color: Colors.white,
-                    ),
+                          fontFamily: 'Inter',
+                          color: Colors.white,
+                        ),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
@@ -145,25 +144,29 @@ class _QuizzesWidgetState extends State<QuizzesWidget> {
                 child: isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _quizzesList.isEmpty
-                    ? const Center(child: Text('No quizzes found.'))
-                    : ListView.builder(
-                  padding: const EdgeInsets.all(12.0),
-                  itemCount: _quizzesList.length,
-                  itemBuilder: (context, index) {
-                    final quiz = _quizzesList[index];
-                    return QuizCard(
-                      quiz: quiz,
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (_) => StartgameWidget(userId:currentUser.uid.toString(), quizId: quiz.quizId.toString(), quizTitle: quiz.title.toString(),),
-                        ),
-                        );
-                      },
-                    );
-                  },
-                ),
+                        ? const Center(child: Text('No quizzes found.'))
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(12.0),
+                            itemCount: _quizzesList.length,
+                            itemBuilder: (context, index) {
+                              final quiz = _quizzesList[index];
+                              return QuizCard(
+                                quiz: quiz,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => StartgameWidget(
+                                        userId: currentUser.uid.toString(),
+                                        quizId: quiz.quizId.toString(),
+                                        quizTitle: quiz.title.toString(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
               ),
             ],
           ),

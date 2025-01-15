@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/theme.dart';
 import '../quizResult/quiz_result_widget.dart';
 import 'gameplay_party_model.dart';
 
@@ -112,9 +111,8 @@ class _GameplayPartyWidgetState extends State<GameplayPartyWidget>
             .where('quizId', isEqualTo: widget.quizId)
             .get();
 
-        final userScore = historyQuery.docs.isNotEmpty
-            ? historyQuery.docs.first['score']
-            : 0;
+        final userScore =
+            historyQuery.docs.isNotEmpty ? historyQuery.docs.first['score'] : 0;
 
         // Fetch user name
         final userDoc = await FirebaseFirestore.instance
@@ -234,16 +232,17 @@ class _GameplayPartyWidgetState extends State<GameplayPartyWidget>
                     return Column(
                       children: answers.map((answerDoc) {
                         final answerData =
-                        answerDoc.data() as Map<String, dynamic>;
-                        final answerText = answerData['text'] ?? 'No answer text';
+                            answerDoc.data() as Map<String, dynamic>;
+                        final answerText =
+                            answerData['text'] ?? 'No answer text';
                         final isCorrect = answerData['isCorrect'] ?? false;
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: ElevatedButton(
                             onPressed: () {
-                              _nextQuestion(answerText,
-                                  isCorrect ? answerText : '');
+                              _nextQuestion(
+                                  answerText, isCorrect ? answerText : '');
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF1D5D8A),

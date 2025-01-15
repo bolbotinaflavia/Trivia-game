@@ -1,19 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:trivia_2/flutter_flow/animations.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
-import 'dart:math';
+import 'package:trivia_2/theme/animations.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
-import 'package:trivia_2/index.dart';
 import '../../Services/FirebaseService.dart';
 import 'authenticate_model.dart';
 export 'authenticate_model.dart';
@@ -50,11 +45,12 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
     getCurrentUser();
 
     var userRef =
-    FirebaseFirestore.instance.collection("users").doc(currentUser.uid);
+        FirebaseFirestore.instance.collection("users").doc(currentUser.uid);
     DocumentSnapshot doc = await userRef.get();
     final data = doc.data() as Map<String, dynamic>;
     context.pushNamed('AuthenticateAnimation');
   }
+
   Future googleSignIn() async {
     setState(() {
       isloading = true;
@@ -132,7 +128,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
 
   bool isValidEmail(String email) {
     return RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(email);
   }
 
@@ -140,20 +136,18 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
     if (_model.emailAddressCreateTextController.text.isEmpty) {
       errorMessage("Please write your email address!");
       return false;
-    }
-    else
+    } else
       return true;
   }
-
 
   Future addUserDetails(String uid, String? userName) async {
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'uid': uid,
       'userName': userName ?? "",
-      'friends':"",
-      'quizzes':"",
-      'partiesCreated':"",
-      'partiesJoined':"",
+      'friends': "",
+      'quizzes': "",
+      'partiesCreated': "",
+      'partiesJoined': "",
       'uploadedImage': '',
     });
   }
@@ -189,13 +183,13 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
     if (emailConfirmed())
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-           email: _model.emailAddressCreateTextController.text,
-           password: _model.passwordCreateTextController.text,
+          email: _model.emailAddressCreateTextController.text,
+          password: _model.passwordCreateTextController.text,
         );
         getCurrentUser();
         addUserDetails(
-            currentUser.uid.toString(),
-            AutofillHints.username,
+          currentUser.uid.toString(),
+          AutofillHints.username,
         );
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -224,7 +218,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
           errorMessage("Oops, registration failed!");
         }
       }
-    }
+  }
 
   @override
   void initState() {
@@ -357,8 +351,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                               maxWidth: 570.0,
                             ),
                             decoration: BoxDecoration(
-                              color: MyAppTheme.of(context)
-                                  .secondaryBackground,
+                              color: MyAppTheme.of(context).secondaryBackground,
                               boxShadow: [
                                 BoxShadow(
                                   blurRadius: 4.0,
@@ -371,8 +364,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                               ],
                               borderRadius: BorderRadius.circular(12.0),
                               border: Border.all(
-                                color: MyAppTheme.of(context)
-                                    .primaryBackground,
+                                color: MyAppTheme.of(context).primaryBackground,
                                 width: 2.0,
                               ),
                             ),
@@ -385,11 +377,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                     alignment: Alignment(0.0, 0),
                                     child: TabBar(
                                       isScrollable: true,
-                                      labelColor: MyAppTheme.of(context)
-                                          .primaryText,
+                                      labelColor:
+                                          MyAppTheme.of(context).primaryText,
                                       unselectedLabelColor:
-                                          MyAppTheme.of(context)
-                                              .secondaryText,
+                                          MyAppTheme.of(context).secondaryText,
                                       labelPadding:
                                           EdgeInsetsDirectional.fromSTEB(
                                               32.0, 0.0, 32.0, 0.0),
@@ -449,22 +440,23 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                       width: 230.0,
                                                       height: 40.0,
                                                       decoration: BoxDecoration(
-                                                        color: MyAppTheme
-                                                                .of(context)
+                                                        color: MyAppTheme.of(
+                                                                context)
                                                             .secondaryBackground,
                                                       ),
                                                     ),
                                                   Text(
                                                     'Create Account',
                                                     textAlign: TextAlign.start,
-                                                    style: MyAppTheme.of(
-                                                            context)
-                                                        .headlineMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              'Readex Pro',
-                                                          letterSpacing: 0.0,
-                                                        ),
+                                                    style:
+                                                        MyAppTheme.of(context)
+                                                            .headlineMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Readex Pro',
+                                                              letterSpacing:
+                                                                  0.0,
+                                                            ),
                                                   ),
                                                   Padding(
                                                     padding:
@@ -475,8 +467,8 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                       'Let\'s get started by filling out the form below.',
                                                       textAlign:
                                                           TextAlign.start,
-                                                      style: MyAppTheme
-                                                              .of(context)
+                                                      style: MyAppTheme.of(
+                                                              context)
                                                           .labelMedium
                                                           .override(
                                                             fontFamily: 'Inter',
@@ -505,7 +497,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                             InputDecoration(
                                                           labelText: 'Email',
                                                           labelStyle:
-                                                          MyAppTheme.of(
+                                                              MyAppTheme.of(
                                                                       context)
                                                                   .labelLarge
                                                                   .override(
@@ -532,9 +524,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
-                                                              color: MyAppTheme
-                                                                      .of(context)
-                                                                  .primary,
+                                                              color:
+                                                                  MyAppTheme.of(
+                                                                          context)
+                                                                      .primary,
                                                               width: 2.0,
                                                             ),
                                                             borderRadius:
@@ -546,9 +539,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
-                                                              color: MyAppTheme
-                                                                      .of(context)
-                                                                  .error,
+                                                              color:
+                                                                  MyAppTheme.of(
+                                                                          context)
+                                                                      .error,
                                                               width: 2.0,
                                                             ),
                                                             borderRadius:
@@ -560,9 +554,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
-                                                              color: MyAppTheme
-                                                                      .of(context)
-                                                                  .error,
+                                                              color:
+                                                                  MyAppTheme.of(
+                                                                          context)
+                                                                      .error,
                                                               width: 2.0,
                                                             ),
                                                             borderRadius:
@@ -578,16 +573,15 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               EdgeInsets.all(
                                                                   24.0),
                                                         ),
-                                                        style:
-                                                        MyAppTheme.of(
-                                                                    context)
-                                                                .bodyLarge
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
+                                                        style: MyAppTheme.of(
+                                                                context)
+                                                            .bodyLarge
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              letterSpacing:
+                                                                  0.0,
+                                                            ),
                                                         keyboardType:
                                                             TextInputType
                                                                 .emailAddress,
@@ -620,7 +614,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                             InputDecoration(
                                                           labelText: 'Password',
                                                           labelStyle:
-                                                          MyAppTheme.of(
+                                                              MyAppTheme.of(
                                                                       context)
                                                                   .labelLarge
                                                                   .override(
@@ -647,9 +641,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
-                                                              color:MyAppTheme
-                                                                      .of(context)
-                                                                  .primary,
+                                                              color:
+                                                                  MyAppTheme.of(
+                                                                          context)
+                                                                      .primary,
                                                               width: 2.0,
                                                             ),
                                                             borderRadius:
@@ -661,9 +656,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
-                                                              color: MyAppTheme
-                                                                      .of(context)
-                                                                  .error,
+                                                              color:
+                                                                  MyAppTheme.of(
+                                                                          context)
+                                                                      .error,
                                                               width: 2.0,
                                                             ),
                                                             borderRadius:
@@ -675,9 +671,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
-                                                              color: MyAppTheme
-                                                                      .of(context)
-                                                                  .error,
+                                                              color:
+                                                                  MyAppTheme.of(
+                                                                          context)
+                                                                      .error,
                                                               width: 2.0,
                                                             ),
                                                             borderRadius:
@@ -716,16 +713,15 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                             ),
                                                           ),
                                                         ),
-                                                        style:
-                                                        MyAppTheme.of(
-                                                                    context)
-                                                                .bodyLarge
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
+                                                        style: MyAppTheme.of(
+                                                                context)
+                                                            .bodyLarge
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              letterSpacing:
+                                                                  0.0,
+                                                            ),
                                                         validator: _model
                                                             .passwordCreateTextControllerValidator
                                                             .asValidator(
@@ -772,7 +768,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                           color:
                                                               Color(0xFF1D5D8A),
                                                           textStyle:
-                                                          MyAppTheme.of(
+                                                              MyAppTheme.of(
                                                                       context)
                                                                   .titleSmall
                                                                   .override(
@@ -818,15 +814,16 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                             'Or sign up with',
                                                             textAlign: TextAlign
                                                                 .center,
-                                                            style: MyAppTheme
-                                                                    .of(context)
-                                                                .labelMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
+                                                            style:
+                                                                MyAppTheme.of(
+                                                                        context)
+                                                                    .labelMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Inter',
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                    ),
                                                           ),
                                                         ),
                                                       ),
@@ -930,7 +927,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                         BorderRadius.circular(
                                                                             40.0),
                                                                     hoverColor:
-                                                                    MyAppTheme.of(context)
+                                                                        MyAppTheme.of(context)
                                                                             .primaryBackground,
                                                                   ),
                                                                 ),
@@ -1003,7 +1000,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                         BorderRadius.circular(
                                                                             40.0),
                                                                     hoverColor:
-                                                                    MyAppTheme.of(context)
+                                                                        MyAppTheme.of(context)
                                                                             .primaryBackground,
                                                                   ),
                                                                 ),
@@ -1042,22 +1039,23 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                       width: 230.0,
                                                       height: 40.0,
                                                       decoration: BoxDecoration(
-                                                        color: MyAppTheme
-                                                                .of(context)
+                                                        color: MyAppTheme.of(
+                                                                context)
                                                             .secondaryBackground,
                                                       ),
                                                     ),
                                                   Text(
                                                     'Welcome Back',
                                                     textAlign: TextAlign.start,
-                                                    style: MyAppTheme.of(
-                                                            context)
-                                                        .headlineMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              'Readex Pro',
-                                                          letterSpacing: 0.0,
-                                                        ),
+                                                    style:
+                                                        MyAppTheme.of(context)
+                                                            .headlineMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Readex Pro',
+                                                              letterSpacing:
+                                                                  0.0,
+                                                            ),
                                                   ),
                                                   Padding(
                                                     padding:
@@ -1068,8 +1066,8 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                       'Fill out the information below in order to access your account.',
                                                       textAlign:
                                                           TextAlign.start,
-                                                      style: MyAppTheme
-                                                              .of(context)
+                                                      style: MyAppTheme.of(
+                                                              context)
                                                           .labelMedium
                                                           .override(
                                                             fontFamily: 'Inter',
@@ -1098,7 +1096,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                             InputDecoration(
                                                           labelText: 'Email',
                                                           labelStyle:
-                                                          MyAppTheme.of(
+                                                              MyAppTheme.of(
                                                                       context)
                                                                   .labelLarge
                                                                   .override(
@@ -1125,9 +1123,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
-                                                              color: MyAppTheme
-                                                                      .of(context)
-                                                                  .primary,
+                                                              color:
+                                                                  MyAppTheme.of(
+                                                                          context)
+                                                                      .primary,
                                                               width: 2.0,
                                                             ),
                                                             borderRadius:
@@ -1175,16 +1174,15 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                       0.0,
                                                                       24.0),
                                                         ),
-                                                        style:
-                                                        MyAppTheme.of(
-                                                                    context)
-                                                                .bodyLarge
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
+                                                        style: MyAppTheme.of(
+                                                                context)
+                                                            .bodyLarge
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              letterSpacing:
+                                                                  0.0,
+                                                            ),
                                                         keyboardType:
                                                             TextInputType
                                                                 .emailAddress,
@@ -1217,7 +1215,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                             InputDecoration(
                                                           labelText: 'Password',
                                                           labelStyle:
-                                                          MyAppTheme.of(
+                                                              MyAppTheme.of(
                                                                       context)
                                                                   .labelLarge
                                                                   .override(
@@ -1244,9 +1242,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
-                                                              color: MyAppTheme
-                                                                      .of(context)
-                                                                  .primary,
+                                                              color:
+                                                                  MyAppTheme.of(
+                                                                          context)
+                                                                      .primary,
                                                               width: 2.0,
                                                             ),
                                                             borderRadius:
@@ -1258,9 +1257,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
-                                                              color: MyAppTheme
-                                                                      .of(context)
-                                                                  .error,
+                                                              color:
+                                                                  MyAppTheme.of(
+                                                                          context)
+                                                                      .error,
                                                               width: 2.0,
                                                             ),
                                                             borderRadius:
@@ -1272,9 +1272,10 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
-                                                              color: MyAppTheme
-                                                                      .of(context)
-                                                                  .error,
+                                                              color:
+                                                                  MyAppTheme.of(
+                                                                          context)
+                                                                      .error,
                                                               width: 2.0,
                                                             ),
                                                             borderRadius:
@@ -1317,16 +1318,15 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                             ),
                                                           ),
                                                         ),
-                                                        style:
-                                                        MyAppTheme.of(
-                                                                    context)
-                                                                .bodyLarge
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
+                                                        style: MyAppTheme.of(
+                                                                context)
+                                                            .bodyLarge
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              letterSpacing:
+                                                                  0.0,
+                                                            ),
                                                         validator: _model
                                                             .passwordTextControllerValidator
                                                             .asValidator(
@@ -1369,11 +1369,11 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                       0.0,
                                                                       0.0,
                                                                       0.0),
-                                                          color: MyAppTheme
-                                                                  .of(context)
+                                                          color: MyAppTheme.of(
+                                                                  context)
                                                               .primary,
                                                           textStyle:
-                                                          MyAppTheme.of(
+                                                              MyAppTheme.of(
                                                                       context)
                                                                   .titleSmall
                                                                   .override(
@@ -1415,16 +1415,15 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                         'Or sign in with',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style:
-                                                        MyAppTheme.of(
-                                                                    context)
-                                                                .labelMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
+                                                        style: MyAppTheme.of(
+                                                                context)
+                                                            .labelMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              letterSpacing:
+                                                                  0.0,
+                                                            ),
                                                       ),
                                                     ),
                                                   ),
@@ -1490,7 +1489,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                       .of(context)
                                                                   .secondaryBackground,
                                                               textStyle:
-                                                              MyAppTheme.of(
+                                                                  MyAppTheme.of(
                                                                           context)
                                                                       .bodyMedium
                                                                       .override(
@@ -1514,7 +1513,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                       .circular(
                                                                           40.0),
                                                               hoverColor:
-                                                              MyAppTheme.of(
+                                                                  MyAppTheme.of(
                                                                           context)
                                                                       .primaryBackground,
                                                             ),
@@ -1562,7 +1561,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                       .of(context)
                                                                   .secondaryBackground,
                                                               textStyle:
-                                                              MyAppTheme.of(
+                                                                  MyAppTheme.of(
                                                                           context)
                                                                       .bodyMedium
                                                                       .override(
@@ -1586,7 +1585,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                       .circular(
                                                                           40.0),
                                                               hoverColor:
-                                                              MyAppTheme.of(
+                                                                  MyAppTheme.of(
                                                                           context)
                                                                       .primaryBackground,
                                                             ),
@@ -1631,11 +1630,11 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                                       0.0,
                                                                       0.0,
                                                                       0.0),
-                                                          color: MyAppTheme
-                                                                  .of(context)
+                                                          color: MyAppTheme.of(
+                                                                  context)
                                                               .secondaryBackground,
                                                           textStyle:
-                                                          MyAppTheme.of(
+                                                              MyAppTheme.of(
                                                                       context)
                                                                   .bodyMedium
                                                                   .override(
@@ -1659,10 +1658,9 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
                                                               BorderRadius
                                                                   .circular(
                                                                       40.0),
-                                                          hoverColor:
-                                                          MyAppTheme.of(
-                                                                      context)
-                                                                  .primaryBackground,
+                                                          hoverColor: MyAppTheme
+                                                                  .of(context)
+                                                              .primaryBackground,
                                                         ),
                                                       ),
                                                     ),
@@ -1703,6 +1701,7 @@ class _AuthenticateWidgetState extends State<AuthenticateWidget>
       ),
     );
   }
+
   void showMessage(String s) {
     print(s);
   }

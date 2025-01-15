@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:trivia_2/pages/history/history_widget.dart';
 import '../../reusables/menu.dart';
 import '../discover/discover_widget.dart';
@@ -41,6 +38,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     super.dispose();
   }
+
   Future<void> _loadUserProfile() async {
     try {
       setState(() {
@@ -78,12 +76,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
-      final user = _auth.currentUser;
-        currentUser = user!;
-      _loadUserProfile();
-
+    final user = _auth.currentUser;
+    currentUser = user!;
+    _loadUserProfile();
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -144,7 +142,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             child: Padding(
                               padding: EdgeInsets.all(12.0),
                               child: Text(
-                                  nameController.text.isNotEmpty ? nameController.text : "Unknown User",
+                                nameController.text.isNotEmpty
+                                    ? nameController.text
+                                    : "Unknown User",
                                 textAlign: TextAlign.start,
                                 style: MyAppTheme.of(context)
                                     .displaySmall
@@ -224,37 +224,37 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (_) => DiscoverWidget(
-                                              userId: currentUser.uid.toString(),
+                                              userId:
+                                                  currentUser.uid.toString(),
                                             ),
                                           ),
                                         );
                                       },
-                                    child: Container(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFBED5DA),
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                        shape: BoxShape.rectangle,
-                                      ),
-                                      child: Align(
-
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Text(
-                                          'Discover',
-                                          style: MyAppTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Roboto',
-                                                fontSize: 20.0,
-                                                letterSpacing: 0.0,
-                                              ),
+                                      child: Container(
+                                        width: 50.0,
+                                        height: 50.0,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFBED5DA),
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                          shape: BoxShape.rectangle,
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            'Discover',
+                                            style: MyAppTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'Roboto',
+                                                  fontSize: 20.0,
+                                                  letterSpacing: 0.0,
+                                                ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.all(12.0),
@@ -304,7 +304,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (_) => HistoryWidget(
-                                               userId: currentUser.uid.toString(),
+                                              userId:
+                                                  currentUser.uid.toString(),
                                             ),
                                           ),
                                         );
@@ -315,21 +316,21 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         decoration: BoxDecoration(
                                           color: Color(0xFFBED5DA),
                                           borderRadius:
-                                          BorderRadius.circular(18.0),
+                                              BorderRadius.circular(18.0),
                                           shape: BoxShape.rectangle,
                                         ),
                                         child: Align(
                                           alignment:
-                                          AlignmentDirectional(0.0, 0.0),
+                                              AlignmentDirectional(0.0, 0.0),
                                           child: Text(
                                             'History',
                                             style: MyAppTheme.of(context)
                                                 .bodyMedium
                                                 .override(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 20.0,
-                                              letterSpacing: 0.0,
-                                            ),
+                                                  fontFamily: 'Roboto',
+                                                  fontSize: 20.0,
+                                                  letterSpacing: 0.0,
+                                                ),
                                           ),
                                         ),
                                       ),

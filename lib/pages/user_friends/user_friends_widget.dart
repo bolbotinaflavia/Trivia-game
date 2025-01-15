@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
-import '../../flutter_flow/theme.dart';
+import '../../theme/theme.dart';
 import '../friend_profile/friend_profile_widget.dart';
-import '../profile/profile_widget.dart';
 
 class UserFriendsWidget extends StatefulWidget {
   final String userId;
@@ -18,7 +16,10 @@ class _UserFriendsWidgetState extends State<UserFriendsWidget> {
   Future<List<DocumentSnapshot>> _fetchFriends() async {
     try {
       // Fetch the current user's document
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(widget.userId).get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userId)
+          .get();
 
       // Get the friends array
       final List<dynamic> friendsIds = userDoc['friends'] ?? [];
@@ -85,7 +86,8 @@ class _UserFriendsWidgetState extends State<UserFriendsWidget> {
                       leading: CircleAvatar(
                         backgroundImage: friendImage.isNotEmpty
                             ? NetworkImage(friendImage)
-                            : const AssetImage('assets/images/pin6_.png') as ImageProvider,
+                            : const AssetImage('assets/images/pin6_.png')
+                                as ImageProvider,
                       ),
                       title: Text(friendName),
                       subtitle: const Text("Friend"),
@@ -94,7 +96,8 @@ class _UserFriendsWidgetState extends State<UserFriendsWidget> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => FriendProfileWidget(userId: friendId),
+                            builder: (_) =>
+                                FriendProfileWidget(userId: friendId),
                           ),
                         );
                       },

@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trivia_2/index.dart';
-import 'package:trivia_2/model/HistoryQuiz.dart';
-import '../../Services/auth_service.dart';
-import '../../flutter_flow/icon_button.dart';
-import '../../flutter_flow/model.dart';
-import '../../flutter_flow/theme.dart';
-import '../../flutter_flow/widgets.dart';
-import '../../model/Quiz.dart';
+import '../../theme/icon_button.dart';
+import '../../theme/model.dart';
+import '../../theme/theme.dart';
 import '../../reusables/menu.dart';
-import '../../reusables/quiz_card.dart';
 import 'history_model.dart';
 
 class HistoryWidget extends StatefulWidget {
@@ -37,7 +30,6 @@ class _HistoryWidgetState extends State<HistoryWidget> {
     _model.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,46 +81,46 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                 child: const Text('Quiz History'),
               ),
               Expanded(
-                child:StreamBuilder<QuerySnapshot>(
+                child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
-                            .collection('quizHistory')
-                            .where('userId', isEqualTo: widget.userId)
-                            .orderBy('date', descending: true)
-                            .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
+                      .collection('quizHistory')
+                      .where('userId', isEqualTo: widget.userId)
+                      .orderBy('date', descending: true)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                        return const Center(
-                            child: Text('No quiz history found.'));
-                      }
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return const Center(
+                          child: Text('No quiz history found.'));
+                    }
 
-                      final history = snapshot.data!.docs;
+                    final history = snapshot.data!.docs;
 
-                      return ListView.builder(
-                        itemCount: history.length,
-                        itemBuilder: (context, index) {
-                          final quizHistory = history[index].data() as Map<
-                              String,
-                              dynamic>;
+                    return ListView.builder(
+                      itemCount: history.length,
+                      itemBuilder: (context, index) {
+                        final quizHistory =
+                            history[index].data() as Map<String, dynamic>;
 
-                          return ListTile(
-                            title: Text(quizHistory['quizTitle'] ?? 'Unknown Quiz'),
-                            subtitle: Text(
-                              'Score: ${quizHistory['score']} / ${quizHistory['totalQuestions']}',
-                            ),
-                            trailing: Text(
-                              quizHistory['date'].toDate().toString(),
-                              style: const TextStyle(fontSize: 12.0),
-                            ),
-                          );
-                        },
-                      );
-                    },
+                        return ListTile(
+                          title:
+                              Text(quizHistory['quizTitle'] ?? 'Unknown Quiz'),
+                          subtitle: Text(
+                            'Score: ${quizHistory['score']} / ${quizHistory['totalQuestions']}',
+                          ),
+                          trailing: Text(
+                            quizHistory['date'].toDate().toString(),
+                            style: const TextStyle(fontSize: 12.0),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
-                            ),
+              ),
             ],
           ),
         ),

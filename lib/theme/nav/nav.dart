@@ -6,12 +6,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import 'package:trivia_2/index.dart';
-import 'package:trivia_2/main.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/lat_lng.dart';
-import 'package:trivia_2/flutter_flow/place.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/nav/serialization_util.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/nav/serialization_util.dart';
 import 'package:trivia_2/pages/add_friends_to_party/add_friends_to_party_widget.dart';
 import 'package:trivia_2/pages/friend_profile/friend_profile_widget.dart';
 import 'package:trivia_2/pages/gameplayparty/gameplay_party_widget.dart';

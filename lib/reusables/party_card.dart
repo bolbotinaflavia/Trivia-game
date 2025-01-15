@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import '../flutter_flow/theme.dart';
+import 'package:trivia_2/theme/util.dart';
+import '../theme/theme.dart';
 import '../model/Party.dart';
 
 class PartyCard extends StatelessWidget {
@@ -17,15 +17,12 @@ class PartyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child:
-      Container(
+      child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8.0),
         width: 100.0,
         height: 100.0,
         decoration: BoxDecoration(
-
           color: Color(0xFFBED5DA),
-
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Padding(
@@ -42,7 +39,9 @@ class PartyCard extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
-                    party.photoUrl?.isNotEmpty == true ? party.photoUrl! : 'assets/images/frog.jpg',
+                    party.photoUrl?.isNotEmpty == true
+                        ? party.photoUrl!
+                        : 'assets/images/frog.jpg',
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -54,26 +53,21 @@ class PartyCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Align(
-                      alignment:
-                      AlignmentDirectional(0.0, 0.0),
+                      alignment: AlignmentDirectional(0.0, 0.0),
                       child: Text(
-                          party.name ?? 'Untitled Party',
-                        style: MyAppTheme.of(context)
-                            .titleLarge
-                            .override(
-                          fontFamily: 'Readex Pro',
-                          letterSpacing: 0.0,
-                        ),
+                        party.name ?? 'Untitled Party',
+                        style: MyAppTheme.of(context).titleLarge.override(
+                              fontFamily: 'Readex Pro',
+                              letterSpacing: 0.0,
+                            ),
                       ),
                     ),
                     Text(
                       'Descriere',
-                      style: MyAppTheme.of(context)
-                          .bodySmall
-                          .override(
-                        fontFamily: 'Inter',
-                        letterSpacing: 0.0,
-                      ),
+                      style: MyAppTheme.of(context).bodySmall.override(
+                            fontFamily: 'Inter',
+                            letterSpacing: 0.0,
+                          ),
                     ),
                   ],
                 ),

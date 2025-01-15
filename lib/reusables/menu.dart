@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trivia_2/index.dart';
-import '../flutter_flow/theme.dart';
-import '../flutter_flow/widgets.dart';
+import '../theme/theme.dart';
+import '../theme/widgets.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +77,9 @@ class CustomDrawer extends StatelessWidget {
       padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
       color: const Color(0xFF1D5D8A),
       textStyle: MyAppTheme.of(context).titleSmall.override(
-        fontFamily: 'Inter',
-        color: Colors.white,
-      ),
+            fontFamily: 'Inter',
+            color: Colors.white,
+          ),
       elevation: 0.0,
       borderSide: const BorderSide(
         color: Color(0xFF0D5A8E),

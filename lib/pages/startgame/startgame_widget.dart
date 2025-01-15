@@ -1,11 +1,8 @@
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:trivia_2/index.dart';
 import '../../reusables/menu.dart';
 import 'startgame_model.dart';
@@ -15,7 +12,11 @@ class StartgameWidget extends StatefulWidget {
   final String quizId;
   final String quizTitle;
   final String userId;
-  const StartgameWidget({super.key, required this.quizId, required this.quizTitle, required this.userId});
+  const StartgameWidget(
+      {super.key,
+      required this.quizId,
+      required this.quizTitle,
+      required this.userId});
 
   @override
   State<StartgameWidget> createState() => _StartgameWidgetState();
@@ -117,9 +118,12 @@ class _StartgameWidgetState extends State<StartgameWidget> {
                       ),
                       onPressed: () async {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (_) => GameplayWidget(quizId: widget.quizId, userId: widget.userId, quizTitle: widget.quizTitle)),
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => GameplayWidget(
+                                  quizId: widget.quizId,
+                                  userId: widget.userId,
+                                  quizTitle: widget.quizTitle)),
                         );
                       },
                     ),

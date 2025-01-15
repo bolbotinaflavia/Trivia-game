@@ -1,20 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trivia_2/flutter_flow/choice_chips.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
-import 'package:trivia_2/flutter_flow/controller.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:trivia_2/index.dart';
 import 'package:trivia_2/pages/gameplayparty/gameplay_party_widget.dart';
 import '../../model/Quiz.dart';
 import '../../reusables/menu.dart';
 import '../../reusables/quiz_card.dart';
-import '../scanqrcode/scanQr_code_widget.dart';
 import 'party_model.dart';
 export 'party_model.dart';
 
@@ -43,7 +38,6 @@ class _PartyWidgetState extends State<PartyWidget> {
         .doc(widget.partyId)
         .snapshots();
   }
-
 
   @override
   void initState() {
@@ -82,8 +76,8 @@ class _PartyWidgetState extends State<PartyWidget> {
             .collection('quizzes')
             .where('creatorId', whereIn: partyUsers)
             .get();
-        final quizzes = quizDocs.docs.map((doc) => Quiz.fromSnapshot(doc))
-            .toList();
+        final quizzes =
+            quizDocs.docs.map((doc) => Quiz.fromSnapshot(doc)).toList();
         setState(() {
           _quizzesList = quizzes;
           isLoading = false;
@@ -106,9 +100,7 @@ class _PartyWidgetState extends State<PartyWidget> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: MyAppTheme
-            .of(context)
-            .primaryBackground,
+        backgroundColor: MyAppTheme.of(context).primaryBackground,
         drawer: CustomDrawer(),
         appBar: AppBar(
           backgroundColor: const Color(0xFF1D5D8A),
@@ -120,9 +112,7 @@ class _PartyWidgetState extends State<PartyWidget> {
             fillColor: const Color(0xFF1D5D8A),
             icon: Icon(
               Icons.home_rounded,
-              color: MyAppTheme
-                  .of(context)
-                  .info,
+              color: MyAppTheme.of(context).info,
               size: 24.0,
             ),
             onPressed: () async {
@@ -137,9 +127,7 @@ class _PartyWidgetState extends State<PartyWidget> {
               fillColor: const Color(0xFF1D5D8A),
               icon: Icon(
                 Icons.menu_rounded,
-                color: MyAppTheme
-                    .of(context)
-                    .info,
+                color: MyAppTheme.of(context).info,
                 size: 24.0,
               ),
               onPressed: () async {
@@ -165,8 +153,8 @@ class _PartyWidgetState extends State<PartyWidget> {
               }
 
               final partyData = snapshot.data!.data() as Map<String, dynamic>;
-              final participantsList = List<String>.from(
-                  partyData['users'] ?? []);
+              final participantsList =
+                  List<String>.from(partyData['users'] ?? []);
               final participantsCount = participantsList.length;
               final participantLimit = partyData['participants'] ?? 0;
 
@@ -181,55 +169,50 @@ class _PartyWidgetState extends State<PartyWidget> {
                         backgroundColor: const Color(0xFF1D5D8A),
                         label: Text(
                           '$participantsCount / $participantLimit',
-                          style: MyAppTheme
-                              .of(context)
-                              .bodyMedium
-                              .override(
-                            fontFamily: 'Inter',
-                            color: Colors.white,
-                            letterSpacing: 0.0,
-                          ),
+                          style: MyAppTheme.of(context).bodyMedium.override(
+                                fontFamily: 'Inter',
+                                color: Colors.white,
+                                letterSpacing: 0.0,
+                              ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 24.0),
                     Text(
                       'Available Quizzes',
-                      style: MyAppTheme
-                          .of(context)
-                          .headlineSmall
-                          .override(
-                        fontFamily: 'Readex Pro',
-                        letterSpacing: 0.0,
-                      ),
+                      style: MyAppTheme.of(context).headlineSmall.override(
+                            fontFamily: 'Readex Pro',
+                            letterSpacing: 0.0,
+                          ),
                     ),
                     Expanded(
                       child: isLoading
                           ? const Center(child: CircularProgressIndicator())
                           : _quizzesList.isEmpty
-                          ? const Center(child: Text('No quizzes found.'))
-                          : ListView.builder(
-                        padding: const EdgeInsets.all(12.0),
-                        itemCount: _quizzesList.length,
-                        itemBuilder: (context, index) {
-                          final quiz = _quizzesList[index];
-                          return QuizCard(
-                            quiz: quiz,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => GameplayPartyWidget(
-                                    userId: widget.userId.toString(),
-                                    quizId: quiz.quizId.toString(),
-                                    quizTitle: quiz.title.toString(),
-                                    partyId: widget.partyId,),
+                              ? const Center(child: Text('No quizzes found.'))
+                              : ListView.builder(
+                                  padding: const EdgeInsets.all(12.0),
+                                  itemCount: _quizzesList.length,
+                                  itemBuilder: (context, index) {
+                                    final quiz = _quizzesList[index];
+                                    return QuizCard(
+                                      quiz: quiz,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => GameplayPartyWidget(
+                                              userId: widget.userId.toString(),
+                                              quizId: quiz.quizId.toString(),
+                                              quizTitle: quiz.title.toString(),
+                                              partyId: widget.partyId,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          );
-                        },
-                      ),
                     ),
                     const SizedBox(height: 16.0),
                     FFButtonWidget(
@@ -237,11 +220,10 @@ class _PartyWidgetState extends State<PartyWidget> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) =>
-                                NewPartyWidget(
-                                  partyId: widget.partyId,
-                                  userId: widget.userId,
-                                ),
+                            builder: (_) => NewPartyWidget(
+                              partyId: widget.partyId,
+                              userId: widget.userId,
+                            ),
                           ),
                         );
                       },
@@ -251,18 +233,14 @@ class _PartyWidgetState extends State<PartyWidget> {
                         height: 40.0,
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         color: const Color(0xFF1D5D8A),
-                        textStyle: MyAppTheme
-                            .of(context)
-                            .titleSmall
-                            .override(
-                          fontFamily: 'Inter',
-                          color: Colors.white,
-                          letterSpacing: 0.0,
-                        ),
+                        textStyle: MyAppTheme.of(context).titleSmall.override(
+                              fontFamily: 'Inter',
+                              color: Colors.white,
+                              letterSpacing: 0.0,
+                            ),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-
                   ],
                 ),
               );

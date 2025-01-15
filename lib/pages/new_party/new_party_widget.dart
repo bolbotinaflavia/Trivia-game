@@ -1,15 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trivia_2/flutter_flow/choice_chips.dart';
-import 'package:trivia_2/flutter_flow/icon_button.dart';
-import 'package:trivia_2/flutter_flow/model.dart';
-import 'package:trivia_2/flutter_flow/theme.dart';
-import 'package:trivia_2/flutter_flow/util.dart';
-import 'package:trivia_2/flutter_flow/widgets.dart';
-import 'package:trivia_2/flutter_flow/controller.dart';
+import 'package:trivia_2/theme/icon_button.dart';
+import 'package:trivia_2/theme/model.dart';
+import 'package:trivia_2/theme/theme.dart';
+import 'package:trivia_2/theme/util.dart';
+import 'package:trivia_2/theme/widgets.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:trivia_2/index.dart';
 import '../../reusables/menu.dart';
 import '../add_friends_to_party/add_friends_to_party_widget.dart';
@@ -19,7 +15,8 @@ export 'new_party_model.dart';
 class NewPartyWidget extends StatefulWidget {
   final String userId;
   final String partyId;
-  const NewPartyWidget({super.key, required this.userId, required this.partyId});
+  const NewPartyWidget(
+      {super.key, required this.userId, required this.partyId});
 
   @override
   State<NewPartyWidget> createState() => _NewPartyWidgetState();
@@ -125,14 +122,13 @@ class _NewPartyWidgetState extends State<NewPartyWidget> {
                       label: Text(
                         '$participantsCount / $participantLimit',
                         style: MyAppTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Inter',
-                          color: Colors.white,
-                          letterSpacing: 0.0,
-                        ),
+                              fontFamily: 'Inter',
+                              color: Colors.white,
+                              letterSpacing: 0.0,
+                            ),
                       ),
                     ),
                   ),
-
                   Align(
                     alignment: AlignmentDirectional.center,
                     child: BarcodeWidget(
@@ -154,9 +150,9 @@ class _NewPartyWidgetState extends State<NewPartyWidget> {
                     child: Text(
                       'Scan to join the party',
                       style: MyAppTheme.of(context).bodySmall.override(
-                        fontFamily: 'Inter',
-                        letterSpacing: 0.0,
-                      ),
+                            fontFamily: 'Inter',
+                            letterSpacing: 0.0,
+                          ),
                     ),
                   ),
                   FFButtonWidget(
@@ -165,7 +161,8 @@ class _NewPartyWidgetState extends State<NewPartyWidget> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => AddFriendsToPartyWidget(
-                            partyId: widget.partyId, // Pass the partyId to the next screen
+                            partyId: widget
+                                .partyId, // Pass the partyId to the next screen
                           ),
                         ),
                       );
@@ -177,26 +174,29 @@ class _NewPartyWidgetState extends State<NewPartyWidget> {
                     ),
                     options: FFButtonOptions(
                       height: 40.0,
-                      padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                      iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                      iconPadding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       color: Color(0xFFBED5DA),
                       textStyle: MyAppTheme.of(context).titleSmall.override(
-                        fontFamily: 'Inter',
-                        color: Color(0xFF1D5D8A),
-                        letterSpacing: 0.0,
-                      ),
+                            fontFamily: 'Inter',
+                            color: Color(0xFF1D5D8A),
+                            letterSpacing: 0.0,
+                          ),
                       elevation: 0.0,
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-
                   FFButtonWidget(
                     onPressed: () async {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (_) => PartyWidget(
-                            partyId: widget.partyId, userId: widget.userId, // Pass the partyId to the next screen
+                            partyId: widget.partyId,
+                            userId: widget
+                                .userId, // Pass the partyId to the next screen
                           ),
                         ),
                       );
@@ -213,12 +213,11 @@ class _NewPartyWidgetState extends State<NewPartyWidget> {
                       iconPadding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       color: Color(0xFF1D5D8A),
-                      textStyle:
-                      MyAppTheme.of(context).titleSmall.override(
-                                fontFamily: 'Inter',
-                                color: Colors.white,
-                                letterSpacing: 0.0,
-                              ),
+                      textStyle: MyAppTheme.of(context).titleSmall.override(
+                            fontFamily: 'Inter',
+                            color: Colors.white,
+                            letterSpacing: 0.0,
+                          ),
                       elevation: 0.0,
                       borderRadius: BorderRadius.circular(8.0),
                     ),
