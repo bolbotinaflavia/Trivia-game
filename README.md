@@ -1,7 +1,7 @@
 # trivia
 
 ## Demo
-[![Watch the video][](https://github.com/bolbotinaflavia/Trivia-game/blob/master/Untitled%20video%20-%20Made%20with%20Clipchamp.mp4)
+[!][Watch demo][](https://github.com/bolbotinaflavia/Trivia-game/blob/58206c27b5bd2f3d050844245410595b937ac9f3/Untitled%20video%20-%20Made%20with%20Clipchamp.mp4)
 
 A new Flutter project.
 
